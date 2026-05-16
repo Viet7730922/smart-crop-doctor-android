@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Platform-Android-green.svg?style=for-the-badge&logo=android" alt="Platform">
-  <img src="https://img.shields.io/badge/Language-Java%20%2F%20Kotlin-blue.svg?style=for-the-badge" alt="Language">
+  <img src="https://img.shields.io/badge/Language-Java%20-blue.svg?style=for-the-badge" alt="Language">
   <img src="https://img.shields.io/badge/AI%2FML-TensorFlow%20Lite-orange.svg?style=for-the-badge&logo=tensorflow" alt="AI/ML">
 </p>
 <p align="center">
