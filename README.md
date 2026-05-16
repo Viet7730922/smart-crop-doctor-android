@@ -65,17 +65,17 @@ app/
 ├── src/
 │   ├── main/
 │   │   ├── assets/
-│   │   │   ├── crop_model_int8.tflite     # Mô hình mặc định (Offline fallback)
-│   │   │   └── labels.txt                 # Danh sách nhãn tên bệnh cây trồng
-│   │   ├── java/com/project/smartcropdoctor/
-│   │   │   ├── data/                      # Cấu hình Room Database
-│   │   │   │   ├── Disease.java           # Entity định nghĩa thông tin bệnh
-│   │   │   │   └── DiseaseDao.java        # Data Access Object
-│   │   │   ├── ml/                        # Xử lý AI và Firebase MLOps
-│   │   │   │   ├── TFLiteClassifier.java  # Quản lý luồng Interpreter suy luận
+│   │   │   ├── crop_model_int8.tflite        # Mô hình mặc định (Offline fallback)
+│   │   │   └── labels.txt                    # Danh sách nhãn tên bệnh cây trồng
+│   │   ├── java/ntu/viet773092/ungDungCdbct_65134318/
+│   │   │   ├── data/                         # Cấu hình Room Database
+│   │   │   │   ├── Disease.java              # Entity định nghĩa thông tin bệnh
+│   │   │   │   └── DiseaseDao.java           # Data Access Object
+│   │   │   ├── ml/                           # Xử lý AI và Firebase MLOps
+│   │   │   │   ├── TFLiteClassifier.java     # Quản lý luồng Interpreter suy luận
 │   │   │   │   └── FirebaseModelManager.java # Tải mô hình OTA từ Firebase
-│   │   │   └── ui/                        # Giao diện người dùng
-│   │   │       └── MainActivity.java      # Xử lý CameraX và hiển thị BottomSheet
+│   │   │   └── ui/                           # Giao diện người dùng
+│   │   │       └── MainActivity.java         # Xử lý CameraX và hiển thị BottomSheet
 │   │   └── res/layout/
-│   │       └── activity_main.xml          # Khung ngắm PreviewView và UI điều khiển
-└── build.gradle.kts                       # Cấu hình thư viện Dependencies
+│   │       └── activity_main.xml             # Khung ngắm PreviewView và UI điều khiển
+└── build.gradle.kts                          # Cấu hình thư viện Dependencies
