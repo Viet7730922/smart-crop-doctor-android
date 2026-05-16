@@ -1,7 +1,7 @@
 # Smart Crop Doctor (SmartCropDoctor-Android)
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android-green.svg?style=flat-shaped&logo=android" alt="Platform" height="28">
+  <img src="https://img.shields.io/badge/Platform-Android-green.svg?style=flat-shaped&logo=android" alt="Platform" height="40">
   <img src="https://img.shields.io/badge/Language-Java%20%2F%20Kotlin-blue.svg" alt="Language" height="28">
   <img src="https://img.shields.io/badge/AI%2FML-TensorFlow%20Lite-orange.svg?logo=tensorflow" alt="AI/ML" height="28">
   <img src="https://img.shields.io/badge/Backend-Firebase-yellow.svg?logo=firebase" alt="Backend" height="28">
