@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Language-Java%20%2F%20Kotlin-blue.svg?style=for-the-badge" alt="Language">
   <img src="https://img.shields.io/badge/AI%2FML-TensorFlow%20Lite-orange.svg?style=for-the-badge&logo=tensorflow" alt="AI/ML">
 </p>
-<p>
+<p align="center">
   <img src="https://img.shields.io/badge/Backend-Firebase-yellow.svg?style=for-the-badge&logo=firebase" alt="Backend">
   <img src="https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge" alt="License">
 </p>
