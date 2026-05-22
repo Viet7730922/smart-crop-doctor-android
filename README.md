@@ -1,11 +1,11 @@
 # Smart Crop Doctor (SmartCropDoctor-Android)
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android-green.svg?style=flat-shaped&logo=android" alt="Platform">
-  <img src="https://img.shields.io/badge/Language-Java%20-blue.svg" alt="Language">
-  <img src="https://img.shields.io/badge/AI%2FML-TensorFlow%20Lite-orange.svg?logo=tensorflow" alt="AI/ML">
-  <img src="https://img.shields.io/badge/Backend-Firebase-yellow.svg?logo=firebase" alt="Backend">
-  <img src="https://img.shields.io/badge/License-MIT-purple.svg" alt="License">
+  <img src="https://img.shields.io/badge/Platform-Android-green.svg?style=for-the-badge&logo=android" alt="Platform">
+  <img src="https://img.shields.io/badge/Language-Java%20-blue.svg?style=for-the-badge" alt="Language">
+  <img src="https://img.shields.io/badge/AI%2FML-TensorFlow%20Lite-orange.svg?style=for-the-badge&logo=tensorflow" alt="AI/ML">
+  <img src="https://img.shields.io/badge/Backend-Firebase-yellow.svg?style=for-the-badge&logo=firebase" alt="Backend">
+  <img src="https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge" alt="License">
 </p>
 
 **Smart Crop Doctor** là ứng dụng di động chạy trên nền tảng Android, sử dụng Trí tuệ nhân tạo (AI) để phân tích hình ảnh và chẩn đoán các loại sâu bệnh trên lá cây (đốm lá, rỉ sắt, vàng lá...) theo thời gian thực. 
