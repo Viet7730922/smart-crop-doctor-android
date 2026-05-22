@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "732773227555",
+    "project_id": "smartcropdoctor",
+    "storage_bucket": "smartcropdoctor.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732773227555:android:5f215cfef28a1c60a52596",
+        "android_client_info": {
+          "package_name": "ntu.viet773092.ungDungCdbct_65134318"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNuLDhSuQo4tDc2GeABKvRGiD4btrLQLI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
