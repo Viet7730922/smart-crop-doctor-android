@@ -7,13 +7,6 @@ android {
     namespace = "ntu.viet773092.ungDungCdbct_65134318"
     compileSdk = 36
 
-    configurations.all {
-        resolutionStrategy {
-            exclude(group = "org.tensorflow", module = "tensorflow-lite-api")
-            exclude(group = "org.tensorflow", module = "tensorflow-lite-support-api")
-        }
-    }
-
     defaultConfig {
         applicationId = "ntu.viet773092.ungDungCdbct_65134318"
         minSdk = 24
@@ -55,12 +48,10 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
 
-    // 2. TensorFlow Lite (Bản chuẩn gốc)
-    implementation("org.tensorflow:tensorflow-lite:2.14.0")
-    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
-    implementation("org.tensorflow:tensorflow-lite-metadata:0.4.4")
+    // 2. TensorFlow Lite
+    implementation("com.google.ai.edge.litert:litert:1.0.1")
 
-    // 3. Firebase ML Model Downloader
+    // 3. Firebase ML Model
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-ml-modeldownloader")
 }

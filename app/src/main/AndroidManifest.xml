@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Thay thế danh sách tools:replace phức tạp bằng tools:node="replace" để triệt tiêu mọi xung đột thuộc tính -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
