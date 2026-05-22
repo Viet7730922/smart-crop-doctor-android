@@ -57,7 +57,7 @@ app/
 │   │   ├── assets/
 │   │   │   ├── crop_model_int8.tflite     # Mô hình mặc định (Offline fallback)
 │   │   │   └── labels.txt                 # Danh sách nhãn tên bệnh cây trồng
-│   │   ├── java/ntu/viet773092/ungDungCdbct_65134318/
+│   │   ├── java/ntu/viet773092/ungDungCdbct_65134318/ 
 │   │   │   ├── data/                      # Cấu hình Room Database
 │   │   │   │   ├── Disease.java           # Entity định nghĩa thông tin bệnh
 │   │   │   │   └── DiseaseDao.java        # Data Access Object
