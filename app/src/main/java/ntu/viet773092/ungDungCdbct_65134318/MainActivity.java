@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     startCamera();
                 } else {
                     Toast.makeText(this, "Ứng dụng cần quyền Camera để chẩn đoán bệnh!", Toast.LENGTH_LONG).show();
-                    resultTextView.setText("Chưa được cấp quyền Camera ❌");
+                    resultTextView.setText("Chưa được cấp quyền Camera");
                 }
             });
 
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 cameraProvider.unbindAll();
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview);
 
-                resultTextView.setText("Camera đã sẵn sàng ✅");
+                resultTextView.setText("Camera đã sẵn sàng");
 
             } catch (ExecutionException | InterruptedException e) {
                 Toast.makeText(this, "Lỗi khởi tạo Camera.", Toast.LENGTH_SHORT).show();

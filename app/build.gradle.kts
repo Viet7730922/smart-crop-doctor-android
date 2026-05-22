@@ -4,9 +4,12 @@ plugins {
 
 android {
     namespace = "ntu.viet773092.ungDungCdbct_65134318"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
+    compileSdk = 36
+
+    configurations.all {
+        resolutionStrategy {
+            exclude(group = "org.tensorflow", module = "tensorflow-lite-api")
+            exclude(group = "org.tensorflow", module = "tensorflow-lite-support-api")
         }
     }
 
@@ -16,7 +19,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,19 +45,20 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    // 1. CameraX (Xử lý camera real-time)
-    val camerax_version = "1.3.0"
+
+    // 1. CameraX (Camera real-time)
+    val camerax_version = "1.4.1"
     implementation("androidx.camera:camera-core:${camerax_version}")
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
 
-    // 2. TensorFlow Lite (Chạy mô hình AI)
+    // 2. TensorFlow Lite (Bản chuẩn gốc)
     implementation("org.tensorflow:tensorflow-lite:2.14.0")
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
     implementation("org.tensorflow:tensorflow-lite-metadata:0.4.4")
 
-    // 3. Firebase ML Model Downloader (Lấy model từ xa)
+    // 3. Firebase ML Model Downloader
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-ml-modeldownloader")
 }
