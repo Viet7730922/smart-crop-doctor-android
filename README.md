@@ -1,4 +1,4 @@
-# Smart Crop Doctor (SmartCropDoctor-Android)
+# Ứng Dụng Phân Tích Hình Ảng Chuẩn Đoán Bệnh Cây Trồng Bằng AI (SmartCropDoctor-Android)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Platform-Android-green.svg?style=for-the-badge&logo=android" alt="Platform">
