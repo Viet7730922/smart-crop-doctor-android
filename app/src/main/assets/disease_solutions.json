@@ -1,20 +1,26 @@
 {
-  "Tomato_Late_blight": {
+  "potato early blight": {
+    "vietnamese_name": "Bệnh úa sớm ở khoai tây",
+    "cause": "Do nấm Alternaria solani gây ra trong điều kiện thời tiết ẩm ướt.",
+    "symptoms": "Xuất hiện các đốm màu nâu đen có vòng tròn đồng tâm trên các lá già trước.",
+    "treatment": "Cắt tỉa các lá già bị bệnh. Phun thuốc có hoạt chất Mancozeb hoặc Chlorothalonil."
+  },
+  "tomato late blight": {
     "vietnamese_name": "Bệnh sương mai cà chua",
-    "cause": "Do nấm Phytophthora infestans gây ra trong điều kiện thời tiết ẩm ướt, nhiệt độ thấp.",
-    "symptoms": "Xuất hiện các vết bầm mọng nước trên rìa lá, sau đó lan rộng thành đốm lớn màu nâu đen. Mặt dưới lá có lớp nấm trắng mịn.",
-    "treatment": "Hạn chế tưới nước vào chiều muộn, cắt tỉa lá già sát gốc để thông thoáng. Phun các loại thuốc bảo vệ thực vật chứa hoạt chất Metalaxyl, Mancozeb hoặc Copper Oxychloride."
+    "cause": "Do nấm Phytophthora infestans gây ra khi độ ẩm cao và nhiệt độ thấp.",
+    "symptoms": "Vết bầm mọng nước trên lá, sau đó chuyển sang màu nâu đen. Mặt dưới lá có lớp nấm trắng mịn.",
+    "treatment": "Hạn chế tưới nước vào chiều muộn. Phun các thuốc chứa hoạt chất Metalaxyl hoặc Mancozeb."
   },
-  "Tomato_Early_blight": {
-    "vietnamese_name": "Bệnh đốm vòng cà chua",
-    "cause": "Do nấm Alternaria solani gây ra, thường phát triển mạnh khi thời tiết mưa nắng thất thường.",
-    "symptoms": "Các đốm đen nhỏ xuất hiện ở lá già trước, sau đó lan rộng thành các vòng tròn đồng tâm như hình bia bắn, xung quanh có quầng vàng.",
-    "treatment": "Tiêu hủy tàn dư cây bệnh sau thu hoạch. Sử dụng các thuốc đặc trị chứa hoạt chất Azoxystrobin, Difenoconazole hoặc Chlorothalonil."
-  },
-  "Healthy": {
-    "vietnamese_name": "Cây khỏe mạnh",
+  "tomato healthy": {
+    "vietnamese_name": "Cây cà chua khỏe mạnh",
     "cause": "Không có",
-    "symptoms": "Lá cây có màu sắc xanh tự nhiên, bề mặt lá sạch sẽ, không xuất hiện đốm lạ hay vết hoại tử.",
-    "treatment": "Tiếp tục duy trì chế độ tưới nước, bón phân cân đối và theo dõi định kỳ để phòng ngừa sâu bệnh chủ động."
+    "symptoms": "Lá cây phát triển đều, màu sắc xanh tự nhiên, không có đốm lạ.",
+    "treatment": "Tiếp tục duy trì chế độ chăm sóc định kỳ và kiểm tra lá thường xuyên."
+  },
+  "background": {
+    "vietnamese_name": "Không nhận diện được vật thể",
+    "cause": "Camera không hướng vào lá cây trồng.",
+    "symptoms": "Khung quét đang chứa các vật dụng khác như bàn ghế, tivi, thú nuôi...",
+    "treatment": "Vui lòng đưa ống kính camera hoặc tải lên hình ảnh rõ nét của lá cây cần chẩn đoán."
   }
 }

@@ -5,13 +5,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Size;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -30,6 +32,7 @@ import com.google.firebase.ml.modeldownloader.FirebaseModelDownloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,28 +41,29 @@ public class MainActivity extends AppCompatActivity {
 
     private PreviewView viewFinder;
     private TextView resultTextView;
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-
-    // Điều khiển giao diện cho giai đoạn 1
+    private ImageView ivSelectedImage;
     private Button btnAction;
-    private boolean isAnalyzing = true; // true: đang phân tích, false: tạm dừng quét  
+    private Button btnPickImage;
 
-    // Luồng xử lý riêng cho tác vụ AI, tránh làm nghẽn giao diện  
+    private boolean isAnalyzing = true;
     private ExecutorService cameraExecutor;
 
-    // Bộ phân loại TFLite và trạng thái sẵn sàng  
     private TFLiteClassifier tfliteClassifier;
     private boolean isClassifierReady = false;
 
-    // Quản lý cấp quyền Camera theo cơ chế hiện đại  
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+
+    // ==================== LAUNCHERS ====================
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    startCamera();
-                } else {
-                    Toast.makeText(this, "Ứng dụng cần quyền Camera để chẩn đoán bệnh!", Toast.LENGTH_LONG).show();
-                    resultTextView.setText("Chưa được cấp quyền Camera");
-                }
+                if (isGranted) startCamera();
+                else Toast.makeText(this, "Cần quyền Camera để sử dụng!", Toast.LENGTH_LONG).show();
+            });
+
+    private final ActivityResultLauncher<String> pickImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                if (uri == null) return;
+                processPickedImage(uri);
             });
 
     @Override
@@ -67,97 +71,189 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Khởi tạo Firebase  
-        FirebaseApp.initializeApp(this);
+        try {
+            FirebaseApp.initializeApp(this);
 
-        // Ánh xạ thành phần giao diện  
-        viewFinder = findViewById(R.id.viewFinder);
-        resultTextView = findViewById(R.id.resultTextView);
-        btnAction = findViewById(R.id.btnAction); // Nút điều khiển tạm dừng / tiếp tục  
+            viewFinder = findViewById(R.id.viewFinder);
+            resultTextView = findViewById(R.id.resultTextView);
+            ivSelectedImage = findViewById(R.id.ivSelectedImage);
+            btnAction = findViewById(R.id.btnAction);
+            btnPickImage = findViewById(R.id.btnPickImage);
 
-        // Xử lý sự kiện nút: bấm để tạm dừng hoặc tiếp tục quét  
-        btnAction.setOnClickListener(v -> {
-            if (isAnalyzing) {
-                // Đang quét -> chuyển sang tạm dừng, đóng băng kết quả  
-                isAnalyzing = false;
-                btnAction.setText("Tiếp tục quét");
-                btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_blue_dark));
+            setupButtons();
+
+            cameraExecutor = Executors.newSingleThreadExecutor();
+
+            downloadModelFromFirebase();
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED) {
+                startCamera();
             } else {
-                // Đang tạm dừng -> kích hoạt quét lại  
-                isAnalyzing = true;
-                btnAction.setText("Tạm dừng quét");
-                btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_green_dark));
-                resultTextView.setText("Đang phân tích...");
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Lỗi khởi tạo ứng dụng!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setupButtons() {
+        btnAction.setOnClickListener(v -> {
+            isAnalyzing = !isAnalyzing;
+            btnAction.setText(isAnalyzing ? "Tạm dừng quét" : "Tiếp tục quét");
+            if (isAnalyzing) {
+                ivSelectedImage.setVisibility(View.GONE);
             }
         });
 
-        // Khởi tạo luồng nền cho Camera và AI  
-        cameraExecutor = Executors.newSingleThreadExecutor();
+        btnPickImage.setOnClickListener(v -> {
+            if (isClassifierReady) {
+                pickImageLauncher.launch("image/*");
+            } else {
+                Toast.makeText(this, "Mô hình AI chưa sẵn sàng!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        // Tải hoặc kiểm tra mô hình AI từ Firebase  
-        downloadModelFromFirebase();
+        // SỬA ĐỔI 1: Tối ưu bộ lọc lắng nghe click nhạy bén và cắt chuỗi lấy Key chuẩn xác chứa khoảng trắng
+        resultTextView.setOnClickListener(v -> {
+            String text = resultTextView.getText().toString();
 
-        // Kiểm tra và xin quyền Camera nếu chưa được cấp  
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            startCamera();
-        } else {
-            requestPermissionLauncher.launch(Manifest.permission.CAMERA);
+            // Kích hoạt khi chuỗi chứa dấu đóng mở ngoặc hiển thị tỷ lệ % thực tế (Đảm bảo đã nhận diện xong)
+            if (text.contains("(") && text.contains(")")) {
+                try {
+                    String diseaseKey = "";
+                    // Cắt theo dấu mở ngoặc đơn "(" để lấy trọn vẹn cụm từ tên bệnh tiếng Anh[cite: 16]
+                    diseaseKey = text.split("\\(")[0].trim();
+
+                    android.content.Intent intent = new android.content.Intent(this, DetailActivity.class);
+                    intent.putExtra("DISEASE_KEY", diseaseKey);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void processPickedImage(android.net.Uri uri) {
+        isAnalyzing = false;
+        btnAction.setText("Tiếp tục quét");
+        resultTextView.setText("Đang phân tích ảnh...");
+
+        InputStream inputStream = null;
+        try {
+            // --- BƯỚC 1: ĐỌC LƯỚT KÍCH THƯỚC ẢNH ĐỂ TRÁNH TRÀN BỘ NHỚ RAM ---
+            android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+
+            inputStream = getContentResolver().openInputStream(uri);
+            android.graphics.BitmapFactory.decodeStream(inputStream, null, options);
+            if (inputStream != null) inputStream.close();
+
+            int srcWidth = options.outWidth;
+            int srcHeight = options.outHeight;
+            int inSampleSize = 1;
+
+            if (srcWidth > 400 || srcHeight > 400) {
+                final int halfHeight = srcHeight / 2;
+                final int halfWidth = srcWidth / 2;
+                while ((halfHeight / inSampleSize) >= 200 && (halfWidth / inSampleSize) >= 200) {
+                    inSampleSize *= 2;
+                }
+            }
+
+            // --- BƯỚC 2: GIẢI MÃ THỰC TẾ VÀ ÉP HỆ MÀU ARGB_8888 CHUẨN XÁC ---
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = inSampleSize;
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+            inputStream = getContentResolver().openInputStream(uri);
+            Bitmap sampledBitmap = android.graphics.BitmapFactory.decodeStream(inputStream, null, options);
+            if (inputStream != null) inputStream.close();
+
+            if (sampledBitmap != null) {
+                ivSelectedImage.setImageBitmap(sampledBitmap);
+                ivSelectedImage.setVisibility(View.VISIBLE);
+
+                Bitmap finalBitmap = Bitmap.createScaledBitmap(sampledBitmap, 200, 200, true);
+
+                cameraExecutor.execute(() -> {
+                    try {
+                        if (tfliteClassifier != null) {
+                            String result = tfliteClassifier.classifyImage(finalBitmap);
+                            runOnUiThread(() -> resultTextView.setText(result));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        // SỬA ĐỔI 2: GIẢI PHÁP VÀNG CHỐNG CRASH KHI QUAY LẠI[cite: 16]
+                        // Chỉ hủy duy nhất vùng đệm finalBitmap của lõi AI.[cite: 16]
+                        // TUYỆT ĐỐI không gọi sampledBitmap.recycle() vì View hiển thị ngoài màn hình chính vẫn đang sử dụng nó để vẽ cấu trúc đồ họa![cite: 16]
+                        if (finalBitmap != null && !finalBitmap.isRecycled()) {
+                            finalBitmap.recycle();
+                        }
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Lỗi khi xử lý hình ảnh tĩnh!", Toast.LENGTH_SHORT).show();
+        } finally {
+            if (inputStream != null) {
+                try { inputStream.close(); } catch (Exception ignored) {}
+            }
         }
     }
 
     private void startCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
 
-                // 1. Cấu hình hiển thị preview camera  
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
-                // 2. Cấu hình phân tích hình ảnh (ImageAnalysis)  
                 ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                        .setTargetResolution(new Size(224, 224)) // Độ phân giải phù hợp cho model phân loại  
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) // Chỉ xử lý khung hình mới nhất  
+                        .setTargetResolution(new Size(200, 200))
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .build();
 
-                // Đăng ký analyzer xử lý ảnh theo thời gian thực  
                 imageAnalysis.setAnalyzer(cameraExecutor, new ImageAnalysis.Analyzer() {
                     @Override
                     public void analyze(@NonNull ImageProxy image) {
-                        // Chỉ phân tích khi model đã sẵn sàng và trạng thái isAnalyzing = true  
                         if (isClassifierReady && tfliteClassifier != null && isAnalyzing) {
 
-                            // Chuyển sang UI thread để lấy Bitmap từ PreviewView  
                             runOnUiThread(() -> {
                                 Bitmap bitmap = viewFinder.getBitmap();
 
-                                if (bitmap != null) {
-                                    // Xử lý phân tích ảnh nặng trên luồng nền  
-                                    cameraExecutor.execute(() -> {
-                                        try {
-                                            final String resultText = tfliteClassifier.classifyImage(bitmap);
-
-                                            // Hiển thị kết quả lên giao diện chính  
-                                            runOnUiThread(() -> resultTextView.setText(resultText));
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    });
+                                if (bitmap == null) {
+                                    return;
                                 }
+
+                                Bitmap scaledCameraBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+                                Bitmap finalCameraBitmap = scaledCameraBitmap.copy(Bitmap.Config.ARGB_8888, false);
+
+                                if (scaledCameraBitmap != finalCameraBitmap) scaledCameraBitmap.recycle();
+
+                                cameraExecutor.execute(() -> {
+                                    try {
+                                        final String resultText = tfliteClassifier.classifyImage(finalCameraBitmap);
+                                        runOnUiThread(() -> resultTextView.setText(resultText));
+                                        finalCameraBitmap.recycle();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
                             });
                         }
-
-                        // Giải phóng frame hiện tại để nhận frame tiếp theo  
                         image.close();
                     }
                 });
 
-                // Sử dụng camera sau (máy ảnh chính)  
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-
-                // Liên kết các use case với vòng đời Activity  
                 cameraProvider.unbindAll();
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
 
@@ -168,59 +264,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void downloadModelFromFirebase() {
-        runOnUiThread(() -> resultTextView.setText("Đang kiểm tra mô hình AI từ đám mây..."));
+        resultTextView.setText("Đang tải mô hình AI...");
 
-        // Chỉ tải mô hình khi kết nối WiFi  
         CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
                 .requireWifi()
                 .build();
 
-        // Tải mô hình từ Firebase với tên đã khai báo trong console  
         FirebaseModelDownloader.getInstance()
                 .getModel("crop_doctor_model", DownloadType.LATEST_MODEL, conditions)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        CustomModel model = task.getResult();
-                        File modelFile = model.getFile();
-
-                        if (modelFile != null) {
-                            try {
-                                // Khởi tạo bộ phân loại từ file model vừa tải  
-                                tfliteClassifier = new TFLiteClassifier(modelFile, MainActivity.this);
-                                isClassifierReady = true;
-                                runOnUiThread(() -> resultTextView.setText("Đã nạp mô hình AI từ Firebase!"));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                loadLocalModelFallback();
-                            }
-                        } else {
+                        try {
+                            File modelFile = task.getResult().getFile();
+                            tfliteClassifier = new TFLiteClassifier(modelFile, this);
+                            isClassifierReady = true;
+                            runOnUiThread(() -> resultTextView.setText("✅ Mô hình Firebase đã sẵn sàng!"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             loadLocalModelFallback();
                         }
                     } else {
-                        // Dự phòng nếu không tải được từ Firebase  
                         loadLocalModelFallback();
                     }
                 });
     }
 
-    // Dự phòng: sử dụng mô hình có sẵn trong thư mục assets  
     private void loadLocalModelFallback() {
         try {
-            tfliteClassifier = new TFLiteClassifier(MainActivity.this, "model.tflite");
+            tfliteClassifier = new TFLiteClassifier(this, "model.tflite");
             isClassifierReady = true;
-            runOnUiThread(() -> resultTextView.setText("Sử dụng mô hình AI mặc định (Offline)"));
+            runOnUiThread(() -> resultTextView.setText("Đang dùng mô hình Offline"));
         } catch (IOException e) {
             e.printStackTrace();
-            runOnUiThread(() -> resultTextView.setText("Lỗi nạp mô hình AI cục bộ!"));
+            runOnUiThread(() -> resultTextView.setText("Lỗi mô hình! Kiểm tra file assets"));
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Giải phóng Executor để tránh rò rỉ bộ nhớ khi thoát  
-        if (cameraExecutor != null) {
-            cameraExecutor.shutdown();
-        }
+        if (cameraExecutor != null) cameraExecutor.shutdown();
     }
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- 1. Kính ngắm Camera toàn màn hình -->
+    <!-- 1. Kính ngắm Camera -->
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
@@ -17,7 +17,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 2. Khung viền tập trung mục tiêu ở tâm màn hình -->
+    <!-- 1.1 ImageView tạm thời để chứa ảnh tĩnh tải từ thư viện (Đè lên kính ngắm khi được kích hoạt) -->
+    <ImageView
+        android:id="@+id/ivSelectedImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 2. Khung viền quét -->
     <View
         android:id="@+id/scanOverlay"
         android:layout_width="260dp"
@@ -28,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Dòng chữ hướng dẫn nhỏ phía trên khung quét -->
+    <!-- Hướng dẫn -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 3. Hộp kết quả dạng CardView bo góc -->
+    <!-- 3. Hộp kết quả -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,17 +91,43 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <!-- Nút điều khiển -->
-            <Button
-                android:id="@+id/btnAction"
+            <!-- === 2 NÚT NẰM CHUNG 1 HÀNG === -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="12dp"
-                android:backgroundTint="#2E7D32"
-                android:text="Tạm dừng quét"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                app:cornerRadius="10dp" />
+                android:gravity="center"
+                android:weightSum="3">
+
+                <!-- Nút Chọn ảnh từ thư viện -->
+                <Button
+                    android:id="@+id/btnPickImage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#616161"
+                    android:text="Chọn ảnh"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="10dp" />
+
+                <!-- Nút Tạm dừng / Tiếp tục quét -->
+                <Button
+                    android:id="@+id/btnAction"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:backgroundTint="#2E7D32"
+                    android:text="Tạm dừng quét"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="10dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
