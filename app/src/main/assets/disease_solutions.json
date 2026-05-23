@@ -1,26 +1,236 @@
 {
+  "apple apple scab": {
+    "vietnamese_name": "Bệnh ghẻ lá táo",
+    "cause": "Do nấm Venturia inaequalis gây ra, thường phát triển mạnh trong mùa xuân ẩm ướt.",
+    "symptoms": "Xuất hiện các đốm màu xanh ô liu hoặc nâu đen, có bề mặt như nhung trên lá và quả.",
+    "treatment": "Thu gom và tiêu hủy lá rụng. Phun các loại thuốc trừ nấm chứa hoạt chất Copper Sulfate hoặc Mancozeb."
+  },
+  "apple black rot": {
+    "vietnamese_name": "Bệnh thối đen ở táo",
+    "cause": "Do nấm Botryosphaeria obtusa tấn công qua các vết thương hở hoặc vết côn trùng cắn.",
+    "symptoms": "Lá có đốm màu tím nhỏ rộng dần ra thành đốm mắt ếch. Quả bị thối đen và teo lại.",
+    "treatment": "Cắt bỏ các cành bị chết và loại bỏ quả thối trên cây. Phun thuốc phòng ngừa chứa Captan hoặc Thiram."
+  },
+  "apple cedar apple rust": {
+    "vietnamese_name": "Bệnh rỉ sắt táo - tùng bách",
+    "cause": "Do nấm Gymnosporangium juniperi-virginianae ký sinh luân phiên giữa cây táo và cây tùng bách.",
+    "symptoms": "Các đốm màu vàng cam sáng xuất hiện ở mặt trên của lá, mặt dưới có các cấu trúc hình ống nhỏ.",
+    "treatment": "Không trồng táo gần cây tùng bách. Phun thuốc trừ nấm chứa hoạt chất Myclobutanil khi cây bắt đầu ra lá."
+  },
+  "apple healthy": {
+    "vietnamese_name": "Cây táo khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá xanh đều, bóng mượt, không có đốm màu lạ hoặc dấu hiệu teo tóp.",
+    "treatment": "Duy trì chế độ phân bón hợp lý, cắt tỉa cành định kỳ để cây thông thoáng và đón đủ ánh sáng."
+  },
+  "blueberry healthy": {
+    "vietnamese_name": "Cây việt quất khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá cây có màu xanh đậm tự nhiên, kích thước đồng đều, không bị rách hay biến màu.",
+    "treatment": "Tưới nước giữ ẩm tốt cho đất, duy trì độ pH của đất ở mức chua thích hợp (từ 4.5 đến 5.5)."
+  },
+  "cherry including sour powdery mildew": {
+    "vietnamese_name": "Bệnh phấn trắng trên cây anh đào (cherry)",
+    "cause": "Do nấm Podosphaera clandestina phát triển mạnh khi thời tiết ấm và độ ẩm không khí cao.",
+    "symptoms": "Bề mặt lá bị phủ một lớp bột mịn màu trắng hoặc xám tro, lá có xu hướng bị nếp gấp hoặc xoăn lại.",
+    "treatment": "Tỉa bớt cành để tăng độ thông thoáng. Phun thuốc chứa hoạt chất Lưu huỳnh (Sulfur) hoặc tebuconazole."
+  },
+  "cherry including sour healthy": {
+    "vietnamese_name": "Cây anh đào (cherry) khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Cành lá phát triển tốt, lá có màu xanh tươi sáng, không có lớp phấn rỉ hay cháy mép lá.",
+    "treatment": "Bón phân hữu cơ bổ sung vào đầu mùa xuân và kiểm tra thường xuyên các kẽ lá để phòng trừ sâu bệnh."
+  },
+  "corn maize cercospora leaf spot gray leaf spot": {
+    "vietnamese_name": "Bệnh đốm xám hại ngô (bắp)",
+    "cause": "Do nấm Cercospora zeae-maydis gây ra, thường bùng phát trong điều kiện thời tiết ẩm, nóng.",
+    "symptoms": "Các vết bệnh hình chữ nhật dài, chạy dọc theo gân lá, ban đầu có màu rám nắng sau chuyển sang xám đen.",
+    "treatment": "Luân canh cây trồng khác họ. Sử dụng giống kháng bệnh hoặc phun thuốc nhóm Triazole khi thấy vết bệnh chớm xuất hiện."
+  },
+  "corn maize common rust": {
+    "vietnamese_name": "Bệnh rỉ sắt thông thường trên ngô (bắp)",
+    "cause": "Do nấm Puccinia sorghi gây ra, lây lan nhanh chóng qua bào tử trong gió khi trời mát và ẩm.",
+    "symptoms": "Xuất hiện các mụn nhỏ màu nâu đỏ hoặc vàng gạch ở cả hai mặt lá, sờ vào thấy có bột rỉ sắt dính tay.",
+    "treatment": "Thu dọn sạch tàn dư lá khô sau mùa vụ. Phun các thuốc đặc trị chứa hoạt chất Azoxystrobin hoặc Mancozeb."
+  },
+  "corn maize northern leaf blight": {
+    "vietnamese_name": "Bệnh cháy lá ngô (bắp) miền Bắc",
+    "cause": "Do nấm Exserohilum turcicum ký sinh và gây hại mạnh khi độ ẩm cao, mưa nhiều.",
+    "symptoms": "Vết bệnh hình thoi dài giống như chiếc thoi dệt vải, màu xám hoặc nâu, kích thước lớn làm khô rụi cả lá.",
+    "treatment": "Cày lật sâu tàn dư cây trồng để diệt mầm mống nấm. Phun thuốc bảo vệ thực vật chứa Propiconazole."
+  },
+  "corn maize healthy": {
+    "vietnamese_name": "Cây ngô (bắp) khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Thân cây cứng cáp, lá dài xanh mướt, gân lá rõ ràng, không bị cháy sọc hay thủng lỗ rách.",
+    "treatment": "Tưới nước đầy đủ vào giai đoạn trổ cờ và làm hạt; bón đủ lượng đạm, lân, kali cân đối."
+  },
+  "grape black rot": {
+    "vietnamese_name": "Bệnh thối đen ở nho",
+    "cause": "Do nấm Guignardia bidwellii tấn công, gây thiệt hại nặng nề cho cả lá và chùm quả.",
+    "symptoms": "Lá có đốm tròn nhỏ màu nâu sẫm. Quả nho bị héo rũ, khô đen và nhăn nheo giống như quả nho khô.",
+    "treatment": "Cắt tỉa triệt để cành nhiễm bệnh vào mùa đông. Phun phòng thuốc gốc Đồng (Copper) hoặc Mancozeb từ khi chớm ra chồi."
+  },
+  "grape esca black measles": {
+    "vietnamese_name": "Bệnh Esca (Vết thâm đen) hại nho",
+    "cause": "Do một phức hệ nấm hại thân gỗ tấn công vào hệ thống mạch dẫn của cây nho lâu năm.",
+    "symptoms": "Lá bị cháy mô giữa các gân tạo thành các vệt sọc màu vàng, quả có nhiều đốm nhỏ màu sẫm như sởi.",
+    "treatment": "Khử trùng dụng cụ cắt tỉa cành bằng cồn. Sử dụng các chế phẩm sinh học bôi vào vết cắt lớn để bảo vệ thân gỗ."
+  },
+  "grape leaf blight isariopsis leaf spot": {
+    "vietnamese_name": "Bệnh cháy lá - đốm lá nho Isariopsis",
+    "cause": "Do nấm Pseudocercospora vitis gây hại chủ yếu vào giai đoạn cuối mùa vụ khi thời tiết chuyển mát.",
+    "symptoms": "Vết bệnh màu nâu đỏ lộn xộn, không có hình dạng cố định mọc trên lá, làm lá già rụng sớm.",
+    "treatment": "Thu dọn sạch sẽ toàn bộ lá rụng dưới gốc cây. Phun thuốc trừ nấm phổ rộng chứa hoạt chất Chlorothalonil."
+  },
+  "grape healthy": {
+    "vietnamese_name": "Cây nho khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá xòe rộng màu xanh tươi, tua cuốn khỏe, chùm quả căng mọng đồng đều không tì vết.",
+    "treatment": "Cắt tỉa tạo tán thông thoáng, làm sạch cỏ dại xung quanh gốc để tránh tích tụ độ ẩm cao."
+  },
+  "orange haunglongbing citrus greening": {
+    "vietnamese_name": "Bệnh vàng lá gân xanh (Greening / HLB) trên cam quýt",
+    "cause": "Do vi khuẩn Liberibacter asiaticus gây ra, lây truyền qua môi giới là con rầy chổng cánh.",
+    "symptoms": "Lá bị vàng loang lổ gân xanh, gân lá bị sưng sần sùi. Quả nhỏ, méo mó và có vị đắng ngắt.",
+    "treatment": "Không có thuốc chữa trị triệt để. Bắt buộc phải nhổ bỏ, tiêu hủy cây bệnh và phun thuốc diệt rầy chổng cánh định kỳ."
+  },
+  "peach bacterial spot": {
+    "vietnamese_name": "Bệnh đốm vi khuẩn ở cây đào",
+    "cause": "Do vi khuẩn Xanthomonas campestris pv. pruni xâm nhập qua các khí khổng khi trời mưa gió.",
+    "symptoms": "Lá có nhiều đốm mọng nước nhỏ màu vàng nhạt, sau hoại tử chết đi tạo thành các lỗ thủng lấm tấm.",
+    "treatment": "Tránh bón quá nhiều phân đạm. Phun phòng bằng các dòng thuốc gốc Đồng (Copper) hoặc Oxytetracycline từ đầu mùa."
+  },
+  "peach healthy": {
+    "vietnamese_name": "Cây đào khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá thon dài phát triển mượt mà, màu sắc xanh thắm tự nhiên, không bị thủng lỗ rách rưới.",
+    "treatment": "Cắt tỉa loại bỏ các cành tăm, cành sâu bệnh sau mỗi mùa hoa để cây tập trung nuôi dưỡng cành mới khỏe."
+  },
+  "pepper bell bacterial spot": {
+    "vietnamese_name": "Bệnh đốm vi khuẩn trên ớt ngọt (ớt chuông)",
+    "cause": "Do vi khuẩn Xanthomonas euvesicatoria gây hại, lây lan nhanh qua giọt bắn nước tưới.",
+    "symptoms": "Các đốm nhỏ màu nâu đen, hơi gồ lên như mụn mọc ở mặt dưới lá; lá bị bệnh nặng sẽ chuyển vàng và rụng rạt.",
+    "treatment": "Sử dụng nguồn hạt giống sạch bệnh. Phun hỗn hợp thuốc gốc Đồng phối trộn với Mancozeb để ngăn vi khuẩn lan rộng."
+  },
+  "pepper bell healthy": {
+    "vietnamese_name": "Cây ớt ngọt (ớt chuông) khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá dày, phẳng dẹt màu xanh bóng, thân cây đứng vững chắc, không có đốm hoại tử.",
+    "treatment": "Tưới nước tập trung vào gốc, tránh làm ướt sũng lá vào ban đêm, bón bổ sung phân canxi bo để tăng sức đề kháng."
+  },
   "potato early blight": {
     "vietnamese_name": "Bệnh úa sớm ở khoai tây",
     "cause": "Do nấm Alternaria solani gây ra trong điều kiện thời tiết ẩm ướt.",
-    "symptoms": "Xuất hiện các đốm màu nâu đen có vòng tròn đồng tâm trên các lá già trước.",
-    "treatment": "Cắt tỉa các lá già bị bệnh. Phun thuốc có hoạt chất Mancozeb hoặc Chlorothalonil."
+    "symptoms": "Xuất hiện các đốm màu nâu đen có vòng tròn đồng tâm giống hình bia bắn trên các lá già trước.",
+    "treatment": "Cắt tỉa các lá già sát mặt đất bị bệnh. Phun thuốc có hoạt chất Mancozeb hoặc Chlorothalonil."
+  },
+  "potato late blight": {
+    "vietnamese_name": "Bệnh sương mai khoai tây (úa muộn)",
+    "cause": "Do nấm Phytophthora infestans gây ra khi độ ẩm rất cao và nhiệt độ mát mẻ.",
+    "symptoms": "Vết bệnh giống như vết bỏng mọng nước trên lá, chuyển sang nâu đen rất nhanh; mặt dưới lá có một lớp mốc trắng mịn.",
+    "treatment": "Tiêu hủy tàn dư cây bệnh. Phun định kỳ các thuốc có tính dẫn sâu như Metalaxyl hoặc Cymoxanil."
+  },
+  "potato healthy": {
+    "vietnamese_name": "Cây khoai tây khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Tán lá sum suê, màu sắc xanh tươi, không dính đốm vòng hay mốc sương ẩm.",
+    "treatment": "Vun xới gốc cao ráo để tránh ngập úng củ, theo dõi sát sao dự báo thời tiết để phun phòng sương mai."
+  },
+  "raspberry healthy": {
+    "vietnamese_name": "Cây mâm xôi (raspberry) khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá cây xẻ thùy phát triển khỏe khoắn, màu xanh tươi sáng, mép lá răng cưa đều đặn.",
+    "treatment": "Tưới nước đều đặn để đất luôn có độ ẩm vừa phải, làm sạch cỏ quanh vùng rễ để tránh cạnh tranh dinh dưỡng."
+  },
+  "soybean healthy": {
+    "vietnamese_name": "Cây đậu nành (đậu tương) khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Các lá kép ba bản rộng xanh mướt, phủ lớp lông tơ mịn tự nhiên, gân lá khỏe, không biến dạng.",
+    "treatment": "Bổ sung phân bón vi lượng, kiểm tra định kỳ sâu cuốn lá và bọ xít gây hại giai đoạn ra hoa làm quả."
+  },
+  "squash powdery mildew": {
+    "vietnamese_name": "Bệnh phấn trắng hại bí tương (bí đỏ/bí ngòi)",
+    "cause": "Do nấm Erysiphe cichoracearum gây hại, bào tử lây lan tự do nhờ gió trong không khí khô nóng.",
+    "symptoms": "Mặt trên của lá bị bao phủ hoàn toàn bởi một lớp bột trắng xóa như rắc phấn, làm lá sớm bị khô cháy.",
+    "treatment": "Trồng khoảng cách thưa thích hợp. Phun phòng bằng dầu neem, nước ion bạc hoặc thuốc trừ nấm chứa Dinocap."
+  },
+  "strawberry leaf scorch": {
+    "vietnamese_name": "Bệnh cháy rụi lá dâu tây",
+    "cause": "Do nấm Diplocarpon earlianum tấn công vào các mô tế bào lá trong suốt mùa sinh trưởng.",
+    "symptoms": "Ban đầu xuất hiện các đốm màu tím nhỏ, sau đó lan rộng thành mảng lớn màu nâu đỏ khiến toàn bộ lá bị khô cháy xém.",
+    "treatment": "Cắt bỏ triệt để toàn bộ lá nhiễm bệnh. Phun thuốc phòng ngừa chứa hoạt chất Azoxystrobin hoặc Difenoconazole."
+  },
+  "strawberry healthy": {
+    "vietnamese_name": "Cây dâu tây khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá hình quạt có màu xanh đậm, bề mặt lá căng mọng khỏe khoắn, hoa và quả phát triển ổn định.",
+    "treatment": "Phủ một lớp rơm khô dưới gốc để nâng đỡ quả tránh tiếp xúc trực tiếp với đất ẩm, giảm thiểu mầm bệnh thối quả."
+  },
+  "tomato bacterial spot": {
+    "vietnamese_name": "Bệnh đốm vi khuẩn trên cây cà chua",
+    "cause": "Do vi khuẩn Xanthomonas perforans gây ra, phát tán mạnh khi trời mưa gió hoặc tưới phun mưa quá mạnh.",
+    "symptoms": "Xuất hiện nhiều đốm nhỏ màu nâu đen, sần sùi lấm tấm trên lá và có quầng vàng sáng bao quanh vết bệnh.",
+    "treatment": "Sử dụng màng phủ nông nghiệp. Phun định kỳ dung dịch Kasugamycin hoặc các chế phẩm gốc Đồng (Copper)."
+  },
+  "tomato early blight": {
+    "vietnamese_name": "Bệnh úa sớm ở cà chua",
+    "cause": "Do nấm Alternaria solani tấn công, thường xuất hiện đầu tiên ở các lá già sát mặt đất.",
+    "symptoms": "Đốm bệnh hoại tử màu nâu sẫm, đặc trưng bởi các đường vòng tròn đồng tâm konsentris, làm vàng cả lá.",
+    "treatment": "Tỉa bỏ các lá già gốc để tạo sự thông thoáng. Phun thuốc bảo vệ thực vật chứa hoạt chất Chlorothalonil."
   },
   "tomato late blight": {
     "vietnamese_name": "Bệnh sương mai cà chua",
-    "cause": "Do nấm Phytophthora infestans gây ra khi độ ẩm cao và nhiệt độ thấp.",
-    "symptoms": "Vết bầm mọng nước trên lá, sau đó chuyển sang màu nâu đen. Mặt dưới lá có lớp nấm trắng mịn.",
-    "treatment": "Hạn chế tưới nước vào chiều muộn. Phun các thuốc chứa hoạt chất Metalaxyl hoặc Mancozeb."
+    "cause": "Do nấm Phytophthora infestans gây ra khi độ ẩm không khí vượt ngưỡng 90% và nhiệt độ thấp.",
+    "symptoms": "Vết bầm mọng nước rải rác trên lá, sau đó chuyển sang màu nâu đen rất nhanh. Mặt dưới lá có lớp nấm trắng mịn.",
+    "treatment": "Hạn chế tưới nước trực tiếp lên lá vào chiều muộn. Phun các thuốc chứa hoạt chất Metalaxyl hoặc Mancozeb."
+  },
+  "tomato leaf mold": {
+    "vietnamese_name": "Bệnh nấm mốc lá cà chua",
+    "cause": "Do nấm Passalora fulva phát triển chủ yếu trong môi trường nhà kính hoặc ruộng trồng quá dày, bí bách.",
+    "symptoms": "Mặt trên lá xuất hiện các vệt vàng nhạt loang lổ, lật mặt dưới lá thấy lớp mốc mịn màu xanh ô liu hoặc nâu xám.",
+    "treatment": "Tăng cường hệ thống thông gió cho vườn nuôi. Phun thuốc trừ nấm chứa hoạt chất chứa gốc Đồng hoặc Thiram."
+  },
+  "tomato septoria leaf spot": {
+    "vietnamese_name": "Bệnh đốm lá Septoria ở cà chua",
+    "cause": "Do nấm Septoria lycopersici tấn công, thường xuất hiện sau giai đoạn cây bắt đầu ra quả.",
+    "symptoms": "Rất nhiều đốm tròn nhỏ màu xám nhạt ở trung tâm và có viền màu nâu sẫm, lấm tấm những chấm đen nhỏ xíu.",
+    "treatment": "Tuyệt đối không tưới nước lên tán lá từ trên xuống. Dọn sạch cỏ dại xung quanh và phun thuốc chứa Mancozeb."
+  },
+  "tomato spider mites two spotted spider mite": {
+    "vietnamese_name": "Tác hại do nhện đỏ hai chấm gây ra trên cà chua",
+    "cause": "Do loài ký sinh Tetranychus urticae chích hút nhựa lá trong thời tiết khô hanh.",
+    "symptoms": "Lá bị lấm tấm các chấm nhỏ màu vàng hoặc bạc, mặt dưới lá có các sợi màng tơ mỏng, lá dần bị khô rụng.",
+    "treatment": "Tăng cường độ ẩm cho vườn bằng cách phun sương. Sử dụng các loại thuốc đặc trị nhện (Miticide) như Abamectin."
+  },
+  "tomato target spot": {
+    "vietnamese_name": "Bệnh đốm hình bia bắn (Target Spot) cà chua",
+    "cause": "Do nấm Corynespora cassiicola gây hại, thường bùng phát ở những vùng có khí hậu ấm áp, mưa ẩm kéo dài.",
+    "symptoms": "Các đốm tròn hoại tử màu nâu với các vòng tròn đồng tâm nhỏ nét, nhìn rất giống một cái bia bắn tập.",
+    "treatment": "Cắt tỉa triệt để loại bỏ cành lá bệnh khu vực tầng dưới tán. Phun các dòng thuốc chứa hoạt chất Pyraclostrobin."
+  },
+  "tomato tomato yellow leaf curl virus": {
+    "vietnamese_name": "Bệnh virus xoăn lùn - khảm vàng lá cà chua (TYLCV)",
+    "cause": "Do virus TYLCV truyền qua môi giới trung gian là con bọ phấn trắng (Whitefly).",
+    "symptoms": "Rìa lá bị cuốn cong ngược lên trên hình chiếc thuyền, lá nhỏ biến dạng, vàng mép lá, cây bị thun lùn không lớn.",
+    "treatment": "Không có thuốc trị virus. Tập trung giăng lưới chắn bọ phấn trắng và phun thuốc diệt trừ bọ phấn bằng Imidacloprid."
+  },
+  "tomato tomato mosaic virus": {
+    "vietnamese_name": "Bệnh virus khảm thuốc lá trên cà chua (ToMV)",
+    "cause": "Do virus ToMV gây ra, lây lan rất dễ dàng qua tiếp xúc cơ học, dụng cụ lao động hoặc tay người chăm sóc.",
+    "symptoms": "Lá có màu sắc xanh vàng loang lổ xen kẽ giống như hình vẽ khảm, lá bị sần sùi, thuôn dài thắt lại như lá liễu.",
+    "treatment": "Nhổ bỏ cây bệnh đem đốt ngay. Khử trùng tay và toàn bộ kéo cắt cành bằng xà phòng trước khi chuyển sang chăm cây khác."
   },
   "tomato healthy": {
     "vietnamese_name": "Cây cà chua khỏe mạnh",
     "cause": "Không có",
-    "symptoms": "Lá cây phát triển đều, màu sắc xanh tự nhiên, không có đốm lạ.",
-    "treatment": "Tiếp tục duy trì chế độ chăm sóc định kỳ và kiểm tra lá thường xuyên."
+    "symptoms": "Lá cây phát triển đều, cấu trúc tán lá cân đối, màu sắc xanh tự nhiên, không có đốm lạ.",
+    "treatment": "Tiếp tục duy trì chế độ chăm sóc định kỳ, bón phân cân đối và kiểm tra lá thường xuyên."
   },
   "background": {
     "vietnamese_name": "Không nhận diện được vật thể",
-    "cause": "Camera không hướng vào lá cây trồng.",
-    "symptoms": "Khung quét đang chứa các vật dụng khác như bàn ghế, tivi, thú nuôi...",
-    "treatment": "Vui lòng đưa ống kính camera hoặc tải lên hình ảnh rõ nét của lá cây cần chẩn đoán."
+    "cause": "Camera hoặc hình ảnh tải lên không hướng vào đối tượng lá cây trồng cần chẩn đoán.",
+    "symptoms": "Vùng không gian quét đang chứa các vật dụng sinh hoạt khác như bàn ghế, tivi, máy tính, thú nuôi...",
+    "treatment": "Vui lòng đưa ống kính camera hoặc tải lên một hình ảnh rõ nét, chụp trực diện bề mặt của chiếc lá cây cần chẩn đoán."
   }
 }
