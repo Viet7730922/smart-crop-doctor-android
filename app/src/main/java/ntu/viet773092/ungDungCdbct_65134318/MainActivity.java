@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +23,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.ml.modeldownloader.CustomModel;
@@ -42,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private PreviewView viewFinder;
     private TextView resultTextView;
     private ImageView ivSelectedImage;
-    private Button btnAction;
-    private Button btnPickImage;
+
+    // Cập nhật kiểu khai báo sang lớp MaterialButton để quản lý thay đổi Icon động mượt mà
+    private MaterialButton btnAction;
+    private MaterialButton btnPickImage;
+    private LinearLayout layoutResultClick;
+    private TextView tvClickGuide;
 
     private boolean isAnalyzing = true;
     private ExecutorService cameraExecutor;
@@ -53,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
-    // ==================== LAUNCHERS ====================
+    // Khởi tạo bộ lắng nghe đăng ký cấp quyền camera và khởi chạy hộp thư viện ảnh
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) startCamera();
@@ -79,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
             ivSelectedImage = findViewById(R.id.ivSelectedImage);
             btnAction = findViewById(R.id.btnAction);
             btnPickImage = findViewById(R.id.btnPickImage);
+            layoutResultClick = findViewById(R.id.layoutResultClick);
+            tvClickGuide = findViewById(R.id.tvClickGuide);
 
             setupButtons();
 
@@ -99,12 +106,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Cấu hình lắng nghe sự kiện click và điều phối hoán đổi linh hoạt icon Play/Pause chuẩn chỉ
     private void setupButtons() {
         btnAction.setOnClickListener(v -> {
             isAnalyzing = !isAnalyzing;
-            btnAction.setText(isAnalyzing ? "Tạm dừng quét" : "Tiếp tục quét");
+
             if (isAnalyzing) {
+                btnAction.setText("Tạm dừng quét");
+                btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_green_dark));
+                btnAction.setIconResource(R.drawable.ic_pause);
                 ivSelectedImage.setVisibility(View.GONE);
+                tvClickGuide.setVisibility(View.GONE);
+            } else {
+                btnAction.setText("Tiếp tục quét");
+                btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_blue_dark));
+                btnAction.setIconResource(R.drawable.ic_play);
             }
         });
 
@@ -116,17 +132,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // SỬA ĐỔI 1: Tối ưu bộ lọc lắng nghe click nhạy bén và cắt chuỗi lấy Key chuẩn xác chứa khoảng trắng
-        resultTextView.setOnClickListener(v -> {
+        layoutResultClick.setOnClickListener(v -> {
             String text = resultTextView.getText().toString();
-
-            // Kích hoạt khi chuỗi chứa dấu đóng mở ngoặc hiển thị tỷ lệ % thực tế (Đảm bảo đã nhận diện xong)
             if (text.contains("(") && text.contains(")")) {
                 try {
-                    String diseaseKey = "";
-                    // Cắt theo dấu mở ngoặc đơn "(" để lấy trọn vẹn cụm từ tên bệnh tiếng Anh[cite: 16]
-                    diseaseKey = text.split("\\(")[0].trim();
-
+                    String diseaseKey = text.split("\\(")[0].trim();
                     android.content.Intent intent = new android.content.Intent(this, DetailActivity.class);
                     intent.putExtra("DISEASE_KEY", diseaseKey);
                     startActivity(intent);
@@ -137,14 +147,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Luồng giải mã, thu nhỏ ảnh an toàn chống tràn RAM và đồng bộ hóa icon Play khi hiển thị kết quả tĩnh
     private void processPickedImage(android.net.Uri uri) {
         isAnalyzing = false;
         btnAction.setText("Tiếp tục quét");
+        btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_blue_dark));
+        btnAction.setIconResource(R.drawable.ic_play);
         resultTextView.setText("Đang phân tích ảnh...");
+        tvClickGuide.setVisibility(View.GONE);
 
         InputStream inputStream = null;
         try {
-            // --- BƯỚC 1: ĐỌC LƯỚT KÍCH THƯỚC ẢNH ĐỂ TRÁNH TRÀN BỘ NHỚ RAM ---
             android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
             options.inJustDecodeBounds = true;
 
@@ -164,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            // --- BƯỚC 2: GIẢI MÃ THỰC TẾ VÀ ÉP HỆ MÀU ARGB_8888 CHUẨN XÁC ---
             options.inJustDecodeBounds = false;
             options.inSampleSize = inSampleSize;
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -183,14 +195,14 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         if (tfliteClassifier != null) {
                             String result = tfliteClassifier.classifyImage(finalBitmap);
-                            runOnUiThread(() -> resultTextView.setText(result));
+                            runOnUiThread(() -> {
+                                resultTextView.setText(result);
+                                tvClickGuide.setVisibility(View.VISIBLE);
+                            });
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
-                        // SỬA ĐỔI 2: GIẢI PHÁP VÀNG CHỐNG CRASH KHI QUAY LẠI[cite: 16]
-                        // Chỉ hủy duy nhất vùng đệm finalBitmap của lõi AI.[cite: 16]
-                        // TUYỆT ĐỐI không gọi sampledBitmap.recycle() vì View hiển thị ngoài màn hình chính vẫn đang sử dụng nó để vẽ cấu trúc đồ họa![cite: 16]
                         if (finalBitmap != null && !finalBitmap.isRecycled()) {
                             finalBitmap.recycle();
                         }
@@ -207,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Luồng khởi tạo CameraX và bóc tách từng khung hình luồng video đưa vào bộ thông dịch TFLite
     private void startCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
@@ -241,7 +254,10 @@ public class MainActivity extends AppCompatActivity {
                                 cameraExecutor.execute(() -> {
                                     try {
                                         final String resultText = tfliteClassifier.classifyImage(finalCameraBitmap);
-                                        runOnUiThread(() -> resultTextView.setText(resultText));
+                                        runOnUiThread(() -> {
+                                            resultTextView.setText(resultText);
+                                            tvClickGuide.setVisibility(View.VISIBLE);
+                                        });
                                         finalCameraBitmap.recycle();
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -263,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
+    // Tải và đồng bộ hóa mô hình mạng nơ-ron từ đám mây Firebase ML Model Downloader
     private void downloadModelFromFirebase() {
         resultTextView.setText("Đang tải mô hình AI...");
 
@@ -289,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    // Khởi tạo mô hình AI cục bộ nằm trong thư mục Assets khi thiết bị mất kết nối internet
     private void loadLocalModelFallback() {
         try {
             tfliteClassifier = new TFLiteClassifier(this, "model.tflite");

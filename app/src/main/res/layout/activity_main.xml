@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- 1. Kính ngắm Camera -->
+    <!-- Luồng hiển thị kính ngắm camera toàn màn hình -->
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 1.1 ImageView tạm thời để chứa ảnh tĩnh tải từ thư viện (Đè lên kính ngắm khi được kích hoạt) -->
+    <!-- Thành phần hiển thị ảnh tĩnh khi người dùng chọn từ gallery -->
     <ImageView
         android:id="@+id/ivSelectedImage"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 2. Khung viền quét -->
+    <!-- Khung viền quét xanh lá được đẩy nhẹ lên trên bằng Vertical Bias để tạo khoảng cách thoáng -->
     <View
         android:id="@+id/scanOverlay"
         android:layout_width="260dp"
@@ -38,9 +38,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
 
-    <!-- Hướng dẫn -->
+    <!-- Dòng chữ hướng dẫn thao tác nằm ngay trên đỉnh khung quét -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,7 +55,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 3. Hộp kết quả -->
+    <!-- Hộp CardView chứa kết quả chẩn đoán và hai nút bấm chức năng ở đáy màn hình -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,55 +78,93 @@
                 android:layout_height="wrap_content"
                 android:text="KẾT QUẢ CHẨN ĐOÁN:"
                 android:textColor="#666666"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.05"/>
 
-            <TextView
-                android:id="@+id/resultTextView"
-                android:layout_width="wrap_content"
+            <!-- Khối bố cục văn bản kết quả đã nới rộng khoảng cách cách dòng giữa các chữ -->
+            <LinearLayout
+                android:id="@+id/layoutResultClick"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Đang nạp dữ liệu..."
-                android:textColor="#2E7D32"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="48dp"
+                android:orientation="vertical"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
 
-            <!-- === 2 NÚT NẰM CHUNG 1 HÀNG === -->
+                <TextView
+                    android:id="@+id/resultTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Đang nạp dữ liệu..."
+                    android:textColor="#2E7D32"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvClickGuide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="👉 Nhấn vào đây để xem giải pháp chi tiết"
+                    android:textColor="#1565C0"
+                    android:textSize="12sp"
+                    android:textStyle="italic|bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Thanh chứa hai nút bấm Chọn ảnh và Quét được cân bằng tỷ lệ cân đối -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:weightSum="3">
+                android:weightSum="2">
 
-                <!-- Nút Chọn ảnh từ thư viện -->
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPickImage"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="6dp"
                     android:backgroundTint="#616161"
                     android:text="Chọn ảnh"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    app:cornerRadius="10dp" />
+                    app:cornerRadius="10dp"
+                    app:icon="@drawable/ic_gallery"
+                    app:iconGravity="start"
+                    app:iconPadding="4dp"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="10sp"
+                    app:autoSizeMaxTextSize="13sp"
+                    android:maxLines="1" />
 
-                <!-- Nút Tạm dừng / Tiếp tục quét -->
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAction"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
                     android:backgroundTint="#2E7D32"
                     android:text="Tạm dừng quét"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    app:cornerRadius="10dp" />
+                    app:cornerRadius="10dp"
+                    app:icon="@drawable/ic_pause"
+                    app:iconGravity="start"
+                    app:iconPadding="4dp"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="10sp"
+                    app:autoSizeMaxTextSize="14sp"
+                    android:maxLines="1" />
 
             </LinearLayout>
 
