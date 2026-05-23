@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Size;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,14 +40,18 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultTextView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
-    // Luồng xử lý riêng cho các tác vụ phân tích hình ảnh của AI (tránh đơ giao diện)
+    // Điều khiển giao diện cho giai đoạn 1
+    private Button btnAction;
+    private boolean isAnalyzing = true; // true: đang phân tích, false: tạm dừng quét  
+
+    // Luồng xử lý riêng cho tác vụ AI, tránh làm nghẽn giao diện  
     private ExecutorService cameraExecutor;
 
-    // Bộ phân loại TFLite và trạng thái sẵn sàng[cite: 6]
+    // Bộ phân loại TFLite và trạng thái sẵn sàng  
     private TFLiteClassifier tfliteClassifier;
     private boolean isClassifierReady = false;
 
-    // Bộ quản lý xin quyền Camera hiện đại[cite: 6]
+    // Quản lý cấp quyền Camera theo cơ chế hiện đại  
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -62,20 +67,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Khởi tạo FirebaseApp[cite: 6]
+        // Khởi tạo Firebase  
         FirebaseApp.initializeApp(this);
 
-        // Ánh xạ thành phần giao diện[cite: 6]
+        // Ánh xạ thành phần giao diện  
         viewFinder = findViewById(R.id.viewFinder);
         resultTextView = findViewById(R.id.resultTextView);
+        btnAction = findViewById(R.id.btnAction); // Nút điều khiển tạm dừng / tiếp tục  
 
-        // Khởi tạo Executor chạy ngầm cho Camera/AI[cite: 6]
+        // Xử lý sự kiện nút: bấm để tạm dừng hoặc tiếp tục quét  
+        btnAction.setOnClickListener(v -> {
+            if (isAnalyzing) {
+                // Đang quét -> chuyển sang tạm dừng, đóng băng kết quả  
+                isAnalyzing = false;
+                btnAction.setText("Tiếp tục quét");
+                btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_blue_dark));
+            } else {
+                // Đang tạm dừng -> kích hoạt quét lại  
+                isAnalyzing = true;
+                btnAction.setText("Tạm dừng quét");
+                btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_green_dark));
+                resultTextView.setText("Đang phân tích...");
+            }
+        });
+
+        // Khởi tạo luồng nền cho Camera và AI  
         cameraExecutor = Executors.newSingleThreadExecutor();
 
-        // Kích hoạt tiến trình tải/kiểm tra model AI từ Firebase đám mây[cite: 6]
+        // Tải hoặc kiểm tra mô hình AI từ Firebase  
         downloadModelFromFirebase();
 
-        // Kiểm tra và xin quyền Camera[cite: 6]
+        // Kiểm tra và xin quyền Camera nếu chưa được cấp  
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCamera();
         } else {
@@ -90,34 +112,34 @@ public class MainActivity extends AppCompatActivity {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
 
-                // 1. Cấu hình luồng ngắm Preview[cite: 6]
+                // 1. Cấu hình hiển thị preview camera  
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
-                // 2. Cấu hình luồng Phân tích hình ảnh (Image Analysis)[cite: 6]
+                // 2. Cấu hình phân tích hình ảnh (ImageAnalysis)  
                 ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                        .setTargetResolution(new Size(224, 224)) // Ép về 224x224 tối ưu cho mô hình phân loại[cite: 6]
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) // Chỉ giữ lại khung hình mới nhất[cite: 6]
+                        .setTargetResolution(new Size(224, 224)) // Độ phân giải phù hợp cho model phân loại  
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) // Chỉ xử lý khung hình mới nhất  
                         .build();
 
-                // Đăng ký bộ phân tích thời gian thực[cite: 6]
+                // Đăng ký analyzer xử lý ảnh theo thời gian thực  
                 imageAnalysis.setAnalyzer(cameraExecutor, new ImageAnalysis.Analyzer() {
                     @Override
                     public void analyze(@NonNull ImageProxy image) {
-                        // Chỉ chạy phân tích khi bộ phân loại AI đã được khởi tạo xong[cite: 6]
-                        if (isClassifierReady && tfliteClassifier != null) {
+                        // Chỉ phân tích khi model đã sẵn sàng và trạng thái isAnalyzing = true  
+                        if (isClassifierReady && tfliteClassifier != null && isAnalyzing) {
 
-                            // Ép tác vụ lấy Bitmap từ View giao diện về luồng chính (Main Thread)
+                            // Chuyển sang UI thread để lấy Bitmap từ PreviewView  
                             runOnUiThread(() -> {
                                 Bitmap bitmap = viewFinder.getBitmap();
 
                                 if (bitmap != null) {
-                                    // Đẩy tác vụ phân tích mô hình nặng ngược lại luồng ngầm để chạy độc lập
+                                    // Xử lý phân tích ảnh nặng trên luồng nền  
                                     cameraExecutor.execute(() -> {
                                         try {
                                             final String resultText = tfliteClassifier.classifyImage(bitmap);
 
-                                            // Trả kết quả hiển thị văn bản về lại giao diện chính
+                                            // Hiển thị kết quả lên giao diện chính  
                                             runOnUiThread(() -> resultTextView.setText(resultText));
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -127,15 +149,15 @@ public class MainActivity extends AppCompatActivity {
                             });
                         }
 
-                        // BẮT BUỘC: Phải đóng luồng ảnh cũ để nhường chỗ cho khung hình tiếp theo[cite: 6]
+                        // Giải phóng frame hiện tại để nhận frame tiếp theo  
                         image.close();
                     }
                 });
 
-                // Chọn Camera sau mặc định[cite: 6]
+                // Sử dụng camera sau (máy ảnh chính)  
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
-                // Liên kết đồng thời luồng xem trước và phân tích vào Vòng đời (Lifecycle)[cite: 6]
+                // Liên kết các use case với vòng đời Activity  
                 cameraProvider.unbindAll();
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
 
@@ -148,12 +170,12 @@ public class MainActivity extends AppCompatActivity {
     private void downloadModelFromFirebase() {
         runOnUiThread(() -> resultTextView.setText("Đang kiểm tra mô hình AI từ đám mây..."));
 
-        // Chỉ tải khi máy kết nối mạng Wifi để tránh tốn dung lượng của người dùng[cite: 6]
+        // Chỉ tải mô hình khi kết nối WiFi  
         CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
                 .requireWifi()
                 .build();
 
-        // Tiến hành tải model với tên khớp 100% với tên trên Firebase Console[cite: 6]
+        // Tải mô hình từ Firebase với tên đã khai báo trong console  
         FirebaseModelDownloader.getInstance()
                 .getModel("crop_doctor_model", DownloadType.LATEST_MODEL, conditions)
                 .addOnCompleteListener(task -> {
@@ -163,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (modelFile != null) {
                             try {
-                                // Khởi tạo bộ biên dịch TFLite từ file tải về thành công[cite: 6]
+                                // Khởi tạo bộ phân loại từ file model vừa tải  
                                 tfliteClassifier = new TFLiteClassifier(modelFile, MainActivity.this);
                                 isClassifierReady = true;
                                 runOnUiThread(() -> resultTextView.setText("Đã nạp mô hình AI từ Firebase!"));
@@ -175,13 +197,13 @@ public class MainActivity extends AppCompatActivity {
                             loadLocalModelFallback();
                         }
                     } else {
-                        // Nhánh rẽ dự phòng nếu không tải được từ Firebase[cite: 6]
+                        // Dự phòng nếu không tải được từ Firebase  
                         loadLocalModelFallback();
                     }
                 });
     }
 
-    // Hàm khởi tạo mô hình dự phòng nằm trong thư mục assets để chạy offline[cite: 6]
+    // Dự phòng: sử dụng mô hình có sẵn trong thư mục assets  
     private void loadLocalModelFallback() {
         try {
             tfliteClassifier = new TFLiteClassifier(MainActivity.this, "model.tflite");
@@ -196,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Giải phóng luồng Executor khi thoát ứng dụng để tránh rò rỉ bộ nhớ[cite: 6]
+        // Giải phóng Executor để tránh rò rỉ bộ nhớ khi thoát  
         if (cameraExecutor != null) {
             cameraExecutor.shutdown();
         }

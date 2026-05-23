@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Nền trong suốt để nhìn thấy luồng camera bên dưới -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Độ dày và màu sắc nét vẽ viền kính ngắm (Màu xanh lá chuyên nghiệp) -->
+    <stroke
+        android:width="4dp"
+        android:color="#4CAF50" />
+
+    <!-- Bo tròn các góc góc quét -->
+    <corners android:radius="24dp" />
+</shape>

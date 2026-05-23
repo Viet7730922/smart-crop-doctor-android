@@ -1,0 +1,20 @@
+{
+  "Tomato_Late_blight": {
+    "vietnamese_name": "Bệnh sương mai cà chua",
+    "cause": "Do nấm Phytophthora infestans gây ra trong điều kiện thời tiết ẩm ướt, nhiệt độ thấp.",
+    "symptoms": "Xuất hiện các vết bầm mọng nước trên rìa lá, sau đó lan rộng thành đốm lớn màu nâu đen. Mặt dưới lá có lớp nấm trắng mịn.",
+    "treatment": "Hạn chế tưới nước vào chiều muộn, cắt tỉa lá già sát gốc để thông thoáng. Phun các loại thuốc bảo vệ thực vật chứa hoạt chất Metalaxyl, Mancozeb hoặc Copper Oxychloride."
+  },
+  "Tomato_Early_blight": {
+    "vietnamese_name": "Bệnh đốm vòng cà chua",
+    "cause": "Do nấm Alternaria solani gây ra, thường phát triển mạnh khi thời tiết mưa nắng thất thường.",
+    "symptoms": "Các đốm đen nhỏ xuất hiện ở lá già trước, sau đó lan rộng thành các vòng tròn đồng tâm như hình bia bắn, xung quanh có quầng vàng.",
+    "treatment": "Tiêu hủy tàn dư cây bệnh sau thu hoạch. Sử dụng các thuốc đặc trị chứa hoạt chất Azoxystrobin, Difenoconazole hoặc Chlorothalonil."
+  },
+  "Healthy": {
+    "vietnamese_name": "Cây khỏe mạnh",
+    "cause": "Không có",
+    "symptoms": "Lá cây có màu sắc xanh tự nhiên, bề mặt lá sạch sẽ, không xuất hiện đốm lạ hay vết hoại tử.",
+    "treatment": "Tiếp tục duy trì chế độ tưới nước, bón phân cân đối và theo dõi định kỳ để phòng ngừa sâu bệnh chủ động."
+  }
+}
