@@ -23,6 +23,23 @@
             android:gravity="center"
             android:layout_marginBottom="16dp"/>
 
+        <!-- ĐÃ THÊM: Hộp chứa ảnh bệnh phẩm thu giữ từ màn hình chính -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardDiseaseImage"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="4dp"
+            android:visibility="gone"> <!-- Mặc định ẩn, chỉ hiện khi lấy được ảnh thành công -->
+            <ImageView
+                android:id="@+id/ivDiseaseDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="#E0E0E0"/>
+        </androidx.cardview.widget.CardView>
+
         <!-- Card 1: Nguyên nhân gây bệnh -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

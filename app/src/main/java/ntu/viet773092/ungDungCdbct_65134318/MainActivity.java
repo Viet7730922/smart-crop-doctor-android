@@ -112,13 +112,13 @@ public class MainActivity extends AppCompatActivity {
             isAnalyzing = !isAnalyzing;
 
             if (isAnalyzing) {
-                btnAction.setText("Tạm dừng quét");
+                btnAction.setText("Tạm dừng");
                 btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_green_dark));
                 btnAction.setIconResource(R.drawable.ic_pause);
                 ivSelectedImage.setVisibility(View.GONE);
                 tvClickGuide.setVisibility(View.GONE);
             } else {
-                btnAction.setText("Tiếp tục quét");
+                btnAction.setText("Tiếp tục");
                 btnAction.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_blue_dark));
                 btnAction.setIconResource(R.drawable.ic_play);
             }
