@@ -56,5 +56,6 @@ dependencies {
 
     // 3. Firebase ML Model
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-config")
     implementation("com.google.firebase:firebase-ml-modeldownloader")
 }
