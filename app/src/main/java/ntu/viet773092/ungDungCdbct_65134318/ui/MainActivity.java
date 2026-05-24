@@ -1,9 +1,11 @@
 package ntu.viet773092.ungDungCdbct_65134318.ui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Size;
 import android.view.View;
 import android.widget.ImageView;
@@ -102,9 +104,10 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Lỗi khởi tạo ứng dụng!", Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            // ĐÃ SỬA: Bảo vệ onCreate tuyệt đối không bị văng app do lỗi kiến trúc trang nhớ thiết bị
+            t.printStackTrace();
+            Toast.makeText(this, "Lỗi đồ họa hoặc kiến trúc hệ thống!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -279,70 +282,126 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // CẬP NHẬT: Kéo chuỗi nhãn từ Firebase Remote Config trước, sau đó nạp file mô hình TFLite
+// 🟢 ĐÃ SỬA: Luồng ưu tiên đám mây, tự động lùi về local nếu mất mạng hoặc lỗi kết nối đám mây
     private void downloadModelFromFirebase() {
-        resultTextView.setText("Đang kiểm tra cập nhật AI..."); 
+        runOnUiThread(() -> resultTextView.setText("Đang kiểm tra kết nối AI..."));
 
-        // 1. Khởi tạo bộ cấu hình đám mây Firebase Remote Config
-        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(60) // Kiểm tra và làm mới dữ liệu nhãn sau mỗi 60 giây khi debug
-                .build();
-        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+        cameraExecutor.execute(() -> {
+            boolean isConnected = false;
+            try {
+                android.net.ConnectivityManager cm =
+                        (android.net.ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        // 2. Tiến hành kéo dữ liệu nhãn từ trên Server xuống thiết bị
-        mFirebaseRemoteConfig.fetchAndActivate()
-                .addOnCompleteListener(this, task -> {
-                    // Trích xuất chuỗi nhãn dựa trên Parameter Key đã cấu hình trên Web Firebase
-                    final String remoteLabels = mFirebaseRemoteConfig.getString("ai_model_labels");
-
-                    // 3. Tiến hành tải tệp tin mô hình từ Firebase Model Downloader
-                    CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
-                            .requireWifi() 
-                            .build(); 
-
-                    FirebaseModelDownloader.getInstance() 
-                            .getModel("crop_doctor_model", DownloadType.LATEST_MODEL, conditions) 
-                            .addOnCompleteListener(modelTask -> {
-                        if (modelTask.isSuccessful() && modelTask.getResult() != null) {
-                            try {
-                                File modelFile = modelTask.getResult().getFile(); 
-
-                                // Nếu thiết bị kết nối được và chuỗi nhãn từ Server hợp lệ -> Chạy nhãn đám mây động
-                                if (remoteLabels != null && !remoteLabels.trim().isEmpty()) {
-                                    tfliteClassifier = new TFLiteClassifier(modelFile, remoteLabels);
-                                    isClassifierReady = true; 
-                                    runOnUiThread(() -> resultTextView.setText("✅ Trí tuệ nhân tạo đám mây đã sẵn sàng!"));
-                                } else {
-                                    // Nếu lỗi mạng không lấy được nhãn, tự động lùi về nạp nhãn assets offline ban đầu của bạn
-                                    tfliteClassifier = new TFLiteClassifier(modelFile, this); 
-                                    isClassifierReady = true; 
-                                    runOnUiThread(() -> resultTextView.setText("✅ Đã nạp mô hình đám mây (Nhãn Offline)"));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                loadLocalModelFallback(); 
-                            }
-                        } else {
-                            loadLocalModelFallback(); 
+                if (cm != null) {
+                    android.net.Network activeNetwork = cm.getActiveNetwork();
+                    if (activeNetwork != null) {
+                        android.net.NetworkCapabilities capabilities = cm.getNetworkCapabilities(activeNetwork);
+                        if (capabilities != null) {
+                            // Kiểm tra xem mạng thực tế có truyền được dữ liệu Internet hay không
+                            isConnected = capabilities.hasCapability(
+                                    android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET);
                         }
-                    });
-                });
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // TRƯỜNG HỢP 1: Không có kết nối mạng -> Lùi về nạp mô hình Offline ngay lập tức
+            if (!isConnected) {
+                Log.d("TFLiteClassifier", "Mất mạng. Chuyển hướng sang nạp mô hình cục bộ.");
+                loadLocalModelFallback();
+                return;
+            }
+
+            // TRƯỜNG HỢP 2: Có kết nối mạng -> Ưu tiên kiểm tra cập nhật từ đám mây Firebase
+            runOnUiThread(() -> resultTextView.setText("Đang kiểm tra cập nhật từ đám mây..."));
+
+            try {
+                FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+                FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                        .setMinimumFetchIntervalInSeconds(60)
+                        .setFetchTimeoutInSeconds(4) // TỐI ƯU: Chờ tối đa 4 giây, nếu mạng nghẽn tự động hủy để về Offline
+                        .build();
+                mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+
+                mFirebaseRemoteConfig.fetchAndActivate()
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                String remoteLabels = mFirebaseRemoteConfig.getString("ai_model_labels");
+
+                                CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
+                                        .requireWifi() // Tải qua WiFi để tiết kiệm dữ liệu di động
+                                        .build();
+
+                                FirebaseModelDownloader.getInstance()
+                                        .getModel("crop_doctor_model", DownloadType.LATEST_MODEL, conditions)
+                                        .addOnCompleteListener(modelTask -> {
+                                            if (modelTask.isSuccessful() && modelTask.getResult() != null) {
+                                                try {
+                                                    File modelFile = modelTask.getResult().getFile();
+
+                                                    if (remoteLabels != null && !remoteLabels.trim().isEmpty()) {
+                                                        tfliteClassifier = new TFLiteClassifier(modelFile, remoteLabels);
+                                                    } else {
+                                                        tfliteClassifier = new TFLiteClassifier(modelFile, this);
+                                                    }
+
+                                                    isClassifierReady = true;
+                                                    runOnUiThread(() -> resultTextView.setText("✅ Trí tuệ nhân tạo đám mây đã sẵn sàng!"));
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    loadLocalModelFallback();
+                                                }
+                                            } else {
+                                                // Tải tệp mô hình từ Firebase lỗi -> Lùi về Local
+                                                loadLocalModelFallback();
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> loadLocalModelFallback());
+                            } else {
+                                // fetchAndActivate không thành công -> Lùi về Local
+                                loadLocalModelFallback();
+                            }
+                        })
+                        // Bắt lỗi ngắt mạng giữa chừng trong tiến trình đẩy lệnh gọi lên Firebase
+                        .addOnFailureListener(e -> loadLocalModelFallback());
+            } catch (Exception e) {
+                e.printStackTrace();
+                loadLocalModelFallback();
+            }
+        });
     }
 
     private void loadLocalModelFallback() {
-        try {
-            tfliteClassifier = new TFLiteClassifier(this, "model.tflite");
-            isClassifierReady = true;
+        if (loadLocalModel()) {
             runOnUiThread(() -> resultTextView.setText("Đang dùng mô hình Offline"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            runOnUiThread(() -> resultTextView.setText("Lỗi mô hình! Kiểm tra file assets"));
+        } else {
+            runOnUiThread(() -> resultTextView.setText("Lỗi nạp mô hình! Kiểm tra file assets/model.tflite"));
         }
     }
 
-    // Hàm đón nhận sự kiện onClick trực tiếp từ tệp tin XML để kích hoạt nhảy trang HistoryActivity
     public void openHistoryActivityFromXml(android.view.View view) {
         startActivity(new android.content.Intent(this, HistoryActivity.class));
+    }
+
+    private boolean loadLocalModel() {
+        try {
+            // ĐÃ SỬA: Bọc nội dung setText vào runOnUiThread để đảm bảo an toàn luồng hiển thị đồ họa
+            runOnUiThread(() -> resultTextView.setText("Đang nạp mô hình từ Assets Offline..."));
+
+            // Gọi hàm khởi tạo assets mới đã chuyển đổi
+            tfliteClassifier = new TFLiteClassifier(this, "model.tflite");
+
+            runOnUiThread(() -> resultTextView.setText("Đang dùng mô hình Offline."));
+            isClassifierReady = true;
+            return true;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            String error = t.getClass().getSimpleName() + ": " + t.getMessage();
+            runOnUiThread(() -> resultTextView.setText("LỖI NẠP OFFLINE:\n" + error));
+            return false;
+        }
     }
 
     @Override

@@ -32,6 +32,10 @@ android {
     buildFeatures {
         mlModelBinding = true
     }
+    aaptOptions {
+        noCompress.add("tflite")
+        noCompress.add("txt")
+    }
 }
 
 dependencies {
@@ -51,11 +55,14 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
 
-    // 2. TensorFlow Lite
-    implementation("com.google.ai.edge.litert:litert:1.0.1")
+    // 2. LiteRT (TFLite Runtime)
+    implementation("com.google.ai.edge.litert:litert:2.1.5")
 
-    // 3. Firebase ML Model
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    // 3. Firebase Services
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-config")
-    implementation("com.google.firebase:firebase-ml-modeldownloader")
+    implementation("com.google.firebase:firebase-ml-modeldownloader") {
+        exclude(group = "org.tensorflow", module = "tensorflow-lite")
+        exclude(group = "com.google.ai.edge.litert", module = "litert")
+    }
 }
