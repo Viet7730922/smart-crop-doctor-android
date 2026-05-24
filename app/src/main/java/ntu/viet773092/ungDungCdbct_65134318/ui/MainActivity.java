@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } catch (Throwable t) {
-            // ĐÃ SỬA: Bảo vệ onCreate tuyệt đối không bị văng app do lỗi kiến trúc trang nhớ thiết bị
+            //   Bảo vệ onCreate tuyệt đối không bị văng app do lỗi kiến trúc trang nhớ thiết bị
             t.printStackTrace();
             Toast.makeText(this, "Lỗi đồ họa hoặc kiến trúc hệ thống!", Toast.LENGTH_LONG).show();
         }
@@ -281,8 +281,7 @@ public class MainActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
-    // CẬP NHẬT: Kéo chuỗi nhãn từ Firebase Remote Config trước, sau đó nạp file mô hình TFLite
-// 🟢 ĐÃ SỬA: Luồng ưu tiên đám mây, tự động lùi về local nếu mất mạng hoặc lỗi kết nối đám mây
+    // Hàm kéo chuỗi nhãn từ Firebase Remote Config trước, sau đó nạp file mô hình TFLite
     private void downloadModelFromFirebase() {
         runOnUiThread(() -> resultTextView.setText("Đang kiểm tra kết nối AI..."));
 
@@ -387,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean loadLocalModel() {
         try {
-            // ĐÃ SỬA: Bọc nội dung setText vào runOnUiThread để đảm bảo an toàn luồng hiển thị đồ họa
+            // Bọc nội dung setText vào runOnUiThread để đảm bảo an toàn luồng hiển thị đồ họa
             runOnUiThread(() -> resultTextView.setText("Đang nạp mô hình từ Assets Offline..."));
 
             // Gọi hàm khởi tạo assets mới đã chuyển đổi
