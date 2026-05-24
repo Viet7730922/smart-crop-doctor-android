@@ -11,19 +11,43 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Tiêu đề Tên Bệnh Tiếng Việt -->
-        <TextView
-            android:id="@+id/tvDiseaseName"
+        <!-- Tiêu đề tên bệnh tiếng Việt kết hợp cùng nút Loa phát thanh trợ lý giọng nói -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tên Bệnh Cây Trồng"
-            android:textColor="#1B5E20"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="16dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
-        <!-- ĐÃ THÊM: Hộp chứa ảnh bệnh phẩm thu giữ từ màn hình chính -->
+            <TextView
+                android:id="@+id/tvDiseaseName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tên Bệnh Cây Trồng"
+                android:textColor="#1B5E20"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSpeak"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:icon="@android:drawable/ic_lock_silent_mode_off"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="#FFFFFF"
+                android:backgroundTint="#1565C0"
+                app:shapeAppearanceOverlay="@style/CircleButtonShape" />
+        </LinearLayout>
+
+        <!-- Hộp chứa hình ảnh bệnh phẩm thu giữ từ màn hình chính -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardDiseaseImage"
             android:layout_width="match_parent"
@@ -31,7 +55,7 @@
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="14dp"
             app:cardElevation="4dp"
-            android:visibility="gone"> <!-- Mặc định ẩn, chỉ hiện khi lấy được ảnh thành công -->
+            android:visibility="gone">
             <ImageView
                 android:id="@+id/ivDiseaseDetail"
                 android:layout_width="match_parent"
@@ -40,7 +64,7 @@
                 android:background="#E0E0E0"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card 1: Nguyên nhân gây bệnh -->
+        <!-- Khối thông tin nguyên nhân gây bệnh -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +94,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card 2: Triệu chứng nhận biết -->
+        <!-- Khối thông tin triệu chứng nhận biết bệnh trên lá -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,7 +124,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card 3: Biện pháp điều trị -->
+        <!-- Khối giải pháp và phác đồ thuốc điều trị đặc trị -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +156,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Nút Quay lại màn hình quét -->
+        <!-- Nút bấm quay lại màn hình chính điều khiển camera -->
         <Button
             android:id="@+id/btnBack"
             android:layout_width="match_parent"

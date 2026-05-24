@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Base.Theme.SmartCropDoctor" parent="Theme.Material3.DayNight.NoActionBar">
     </style>
-
+    <style name="CircleButtonShape" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="Theme.SmartCropDoctor" parent="Base.Theme.SmartCropDoctor" />
 </resources>

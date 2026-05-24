@@ -3,24 +3,33 @@ package ntu.viet773092.ungDungCdbct_65134318;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.button.MaterialButton;
+
 import org.json.JSONObject;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
     private TextView tvDiseaseName, tvCause, tvSymptoms, tvTreatment;
     private Button btnBack;
-
-    // Khai báo thêm thành phần hiển thị ảnh chi tiết bệnh phẩm
     private ImageView ivDiseaseDetail;
     private androidx.cardview.widget.CardView cardDiseaseImage;
     private Bitmap diseaseBitmapMemory = null;
+
+    // Thành phần điều khiển âm thanh Trợ lý giọng nói tiếng Việt
+    private MaterialButton btnSpeak;
+    private TextToSpeech textToSpeech;
+    private boolean isSpeaking = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +41,11 @@ public class DetailActivity extends AppCompatActivity {
         tvSymptoms = findViewById(R.id.tvSymptoms);
         tvTreatment = findViewById(R.id.tvTreatment);
         btnBack = findViewById(R.id.btnBack);
-
-        // Ánh xạ các thành phần giao diện hình ảnh mới thêm
         ivDiseaseDetail = findViewById(R.id.ivDiseaseDetail);
         cardDiseaseImage = findViewById(R.id.cardDiseaseImage);
+
+        // Ánh xạ nút Loa phát thanh giọng nói mới thêm
+        btnSpeak = findViewById(R.id.btnSpeak);
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -45,20 +55,76 @@ public class DetailActivity extends AppCompatActivity {
             loadDiseaseSolution(diseaseKey);
         }
 
-        // TIẾN TRÌNH TRÍCH XUẤT NGƯỢC ẢNH TỪ MAINACTIVITY KHÔNG ĐỔI CODE TRANG MAIN
         captureCapturedImageFromMain();
+
+        // KHỞI TẠO BỘ TRỢ LÝ GIỌNG NÓI CHUẨN GOOGLE
+        initTextToSpeech();
     }
 
-    // Thuật toán tự động định vị và bóc tách dữ liệu ảnh từ View của MainActivity
+    // Thiết lập ngôn ngữ hệ thống tiếng Việt cho TextToSpeech
+    private void initTextToSpeech() {
+        textToSpeech = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                // Đặt cấu hình định dạng ngôn ngữ về tiếng Việt
+                int result = textToSpeech.setLanguage(new Locale("vi", "VN"));
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(this, "Thiết bị chưa cài gói dữ liệu tiếng Việt chuẩn!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Thiết lập hành động khi nhấn vào nút Loa phát thanh
+                    btnSpeak.setOnClickListener(v -> {
+                        if (isSpeaking) {
+                            stopReading();
+                        } else {
+                            startReadingPhacDo();
+                        }
+                    });
+                }
+            } else {
+                Toast.makeText(this, "Không thể khởi chạy bộ đọc TextToSpeech!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Tạo chuỗi văn bản liên mạch và ra lệnh cho trợ lý đọc to phác đồ
+    private void startReadingPhacDo() {
+        if (textToSpeech == null) return;
+
+        String name = tvDiseaseName.getText().toString();
+        String cause = tvCause.getText().toString();
+        String symptoms = tvSymptoms.getText().toString();
+        String treatment = tvTreatment.getText().toString();
+
+        // Kết hợp dữ liệu thành một văn bản đọc liền mạch, ngắt nghỉ tự nhiên bằng dấu phẩy
+        String fullTextToRead = "Chẩn đoán: " + name
+                + ", . Nguyên nhân: " + cause
+                + ", . Triệu chứng nhận biết: " + symptoms
+                + ", . Biện pháp điều trị đặc trị: " + treatment;
+
+        // Ra lệnh đọc văn bản (QUEUE_FLUSH giúp xóa các câu đọc thừa trước đó để đọc câu mới ngay)
+        textToSpeech.speak(fullTextToRead, TextToSpeech.QUEUE_FLUSH, null, "CropDoctorSpeakID");
+
+        isSpeaking = true;
+        btnSpeak.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.RED));
+        btnSpeak.setIconResource(android.R.drawable.ic_media_ff); // Đổi biểu tượng sang trạng thái đang phát
+    }
+
+    // Hàm dừng đọc ngay lập tức khi bà con nhấn nút Loa một lần nữa
+    private void stopReading() {
+        if (textToSpeech != null && textToSpeech.isSpeaking()) {
+            textToSpeech.stop();
+        }
+        isSpeaking = false;
+        btnSpeak.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#1565C0")));
+        btnSpeak.setIconResource(android.R.drawable.ic_lock_silent_mode_off);
+    }
+
     private void captureCapturedImageFromMain() {
         try {
-            // Kiểm tra ngầm xem MainActivity có đang hoạt động trên hệ thống hay không
             if (MainApplication.getMainActivityContext() != null) {
                 MainActivity mainActivity = MainApplication.getMainActivityContext();
                 ImageView mainImageView = mainActivity.findViewById(R.id.ivSelectedImage);
                 androidx.camera.view.PreviewView mainPreviewView = mainActivity.findViewById(R.id.viewFinder);
 
-                // Trường hợp 1: Nếu ImageView đang hiện nghĩa là người dùng đang xem kết quả từ ảnh tĩnh thư viện
                 if (mainImageView != null && mainImageView.getVisibility() == View.VISIBLE) {
                     if (mainImageView.getDrawable() instanceof BitmapDrawable) {
                         Bitmap origin = ((BitmapDrawable) mainImageView.getDrawable()).getBitmap();
@@ -66,16 +132,13 @@ public class DetailActivity extends AppCompatActivity {
                             diseaseBitmapMemory = origin.copy(origin.getConfig(), false);
                         }
                     }
-                }
-                // Trường hợp 2: Nếu không thì trích xuất trực tiếp khung hình đóng băng hiện tại của kính ngắm camera trực tiếp
-                else if (mainPreviewView != null) {
+                } else if (mainPreviewView != null) {
                     Bitmap cameraFrame = mainPreviewView.getBitmap();
                     if (cameraFrame != null) {
                         diseaseBitmapMemory = cameraFrame;
                     }
                 }
 
-                // Nếu thu giữ ma trận điểm ảnh thành công, tiến hành gắn lên giao diện trang chi tiết
                 if (diseaseBitmapMemory != null) {
                     ivDiseaseDetail.setImageBitmap(diseaseBitmapMemory);
                     cardDiseaseImage.setVisibility(View.VISIBLE);
@@ -109,6 +172,17 @@ public class DetailActivity extends AppCompatActivity {
                 tvCause.setText(cause);
                 tvSymptoms.setText(symptoms);
                 tvTreatment.setText(treatment);
+
+                new Thread(() -> {
+                    try {
+                        HistoryDatabaseHelper dbHelper = new HistoryDatabaseHelper(DetailActivity.this);
+                        Thread.sleep(500);
+                        dbHelper.insertHistory(key, nameVi, diseaseBitmapMemory);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+
             } else {
                 tvDiseaseName.setText(key);
                 tvCause.setText("Chưa có thông tin nguyên nhân trong hệ thống dữ liệu.");
@@ -123,16 +197,18 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    // GIẢI PHÓNG TOÀN BỘ VÙNG NHỚ ĐỆM HÌNH ẢNH KHI THOÁT KHỎI TRANG DETAIL
     @Override
     protected void onDestroy() {
+        // Tắt bộ đọc TextToSpeech hoàn toàn khi thoát trang để bảo vệ tài nguyên âm thanh hệ thống
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
         super.onDestroy();
         try {
-            // Xóa sạch liên kết ảnh trong ImageView để tránh rò rỉ bộ nhớ đồ họa
             if (ivDiseaseDetail != null) {
                 ivDiseaseDetail.setImageDrawable(null);
             }
-            // Gọi lệnh xóa sổ pixel của Bitmap bộ nhớ tạm ra khỏi thanh RAM ngay lập tức
             if (diseaseBitmapMemory != null && !diseaseBitmapMemory.isRecycled()) {
                 diseaseBitmapMemory.recycle();
                 diseaseBitmapMemory = null;
