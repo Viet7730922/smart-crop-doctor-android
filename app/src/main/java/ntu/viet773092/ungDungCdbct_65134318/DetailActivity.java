@@ -26,7 +26,6 @@ public class DetailActivity extends AppCompatActivity {
     private androidx.cardview.widget.CardView cardDiseaseImage;
     private Bitmap diseaseBitmapMemory = null;
 
-    // Thành phần điều khiển âm thanh Trợ lý giọng nói tiếng Việt
     private MaterialButton btnSpeak;
     private TextToSpeech textToSpeech;
     private boolean isSpeaking = false;
@@ -43,8 +42,6 @@ public class DetailActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         ivDiseaseDetail = findViewById(R.id.ivDiseaseDetail);
         cardDiseaseImage = findViewById(R.id.cardDiseaseImage);
-
-        // Ánh xạ nút Loa phát thanh giọng nói mới thêm
         btnSpeak = findViewById(R.id.btnSpeak);
 
         btnBack.setOnClickListener(v -> finish());
@@ -56,21 +53,17 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         captureCapturedImageFromMain();
-
-        // KHỞI TẠO BỘ TRỢ LÝ GIỌNG NÓI CHUẨN GOOGLE
         initTextToSpeech();
     }
 
-    // Thiết lập ngôn ngữ hệ thống tiếng Việt cho TextToSpeech
+    // Khởi tạo và thiết lập định dạng tiếng Việt cho bộ đọc TextToSpeech
     private void initTextToSpeech() {
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
-                // Đặt cấu hình định dạng ngôn ngữ về tiếng Việt
                 int result = textToSpeech.setLanguage(new Locale("vi", "VN"));
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Toast.makeText(this, "Thiết bị chưa cài gói dữ liệu tiếng Việt chuẩn!", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Thiết lập hành động khi nhấn vào nút Loa phát thanh
                     btnSpeak.setOnClickListener(v -> {
                         if (isSpeaking) {
                             stopReading();
@@ -85,7 +78,7 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    // Tạo chuỗi văn bản liên mạch và ra lệnh cho trợ lý đọc to phác đồ
+    // Lọc sạch văn bản giao diện và ra lệnh phát âm thanh phác đồ điều trị
     private void startReadingPhacDo() {
         if (textToSpeech == null) return;
 
@@ -94,21 +87,19 @@ public class DetailActivity extends AppCompatActivity {
         String symptoms = tvSymptoms.getText().toString();
         String treatment = tvTreatment.getText().toString();
 
-        // Kết hợp dữ liệu thành một văn bản đọc liền mạch, ngắt nghỉ tự nhiên bằng dấu phẩy
-        String fullTextToRead = "Chẩn đoán: " + name
-                + ", . Nguyên nhân: " + cause
-                + ", . Triệu chứng nhận biết: " + symptoms
-                + ", . Biện pháp điều trị đặc trị: " + treatment;
+        String fullTextToRead = "Chẩn đoán bệnh: " + name
+                + ". Nguyên nhân do: " + cause
+                + ". Triệu chứng nhận biết là: " + symptoms
+                + ". Biện pháp điều trị đặc trị: " + treatment;
 
-        // Ra lệnh đọc văn bản (QUEUE_FLUSH giúp xóa các câu đọc thừa trước đó để đọc câu mới ngay)
         textToSpeech.speak(fullTextToRead, TextToSpeech.QUEUE_FLUSH, null, "CropDoctorSpeakID");
 
         isSpeaking = true;
         btnSpeak.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.RED));
-        btnSpeak.setIconResource(android.R.drawable.ic_media_ff); // Đổi biểu tượng sang trạng thái đang phát
+        btnSpeak.setIconResource(android.R.drawable.ic_media_ff);
     }
 
-    // Hàm dừng đọc ngay lập tức khi bà con nhấn nút Loa một lần nữa
+    // Ra lệnh ngắt phát âm và khôi phục trạng thái nút bấm về mặc định
     private void stopReading() {
         if (textToSpeech != null && textToSpeech.isSpeaking()) {
             textToSpeech.stop();
@@ -118,6 +109,19 @@ public class DetailActivity extends AppCompatActivity {
         btnSpeak.setIconResource(android.R.drawable.ic_lock_silent_mode_off);
     }
 
+    // Chặn đứng âm thanh lập tức khi người dùng ẩn ứng dụng hoặc có cuộc gọi đến
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (textToSpeech != null && textToSpeech.isSpeaking()) {
+            textToSpeech.stop();
+            isSpeaking = false;
+            btnSpeak.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#1565C0")));
+            btnSpeak.setIconResource(android.R.drawable.ic_lock_silent_mode_off);
+        }
+    }
+
+    // Trích xuất ảnh bệnh phẩm từ luồng hiển thị hoạt động của màn hình chính
     private void captureCapturedImageFromMain() {
         try {
             if (MainApplication.getMainActivityContext() != null) {
@@ -149,6 +153,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    // Đọc dữ liệu JSON phác đồ giải pháp cục bộ và kích hoạt luồng lưu SQLite ngầm
     private void loadDiseaseSolution(String key) {
         try {
             InputStream is = getAssets().open("disease_solutions.json");
@@ -197,9 +202,9 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    // Hủy hoàn toàn bộ đọc TextToSpeech và giải phóng tài nguyên đồ họa bộ nhớ RAM
     @Override
     protected void onDestroy() {
-        // Tắt bộ đọc TextToSpeech hoàn toàn khi thoát trang để bảo vệ tài nguyên âm thanh hệ thống
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
