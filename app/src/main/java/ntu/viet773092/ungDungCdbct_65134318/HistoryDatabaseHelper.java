@@ -73,4 +73,16 @@ public class HistoryDatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_HISTORY, null, values);
         db.close();
     }
+
+    // Lấy toàn bộ danh sách nhật ký chẩn đoán được sắp xếp từ mới nhất đến cũ nhất
+    public android.database.Cursor getAllHistory() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_HISTORY, null, null, null, null, null, COLUMN_ID + " DESC");
+    }
+
+    public void deleteHistoryItem(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_HISTORY, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
 }

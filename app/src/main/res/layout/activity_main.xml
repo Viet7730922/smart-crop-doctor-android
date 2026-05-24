@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Luồng hiển thị kính ngắm camera toàn màn hình -->
+    <!-- Camera Preview -->
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Thành phần hiển thị ảnh tĩnh khi người dùng chọn từ gallery -->
+    <!-- Ảnh chọn từ gallery -->
     <ImageView
         android:id="@+id/ivSelectedImage"
         android:layout_width="0dp"
@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="@+id/scanOverlay"
         app:layout_constraintEnd_toEndOf="@+id/scanOverlay" />
 
-    <!-- Khung viền quét xanh lá được đẩy nhẹ lên trên bằng Vertical Bias để tạo khoảng cách thoáng -->
+    <!-- Khung quét -->
     <View
         android:id="@+id/scanOverlay"
         android:layout_width="260dp"
@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.4" />
 
-    <!-- Dòng chữ hướng dẫn thao tác nằm ngay trên đỉnh khung quét -->
+    <!-- Hướng dẫn -->
     <TextView
         android:id="@+id/tvInstruction"
         android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp" />
 
-    <!-- Hộp CardView chứa kết quả chẩn đoán và hai nút bấm chức năng ở đáy màn hình -->
+    <!-- CardView kết quả (Đã căn chỉnh trục đối xứng và phân bổ khoảng cách hoàn hảo) -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,16 +79,45 @@
             android:orientation="vertical"
             android:padding="18dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Đã sửa: Đồng bộ trục thẳng hàng tuyệt đối giữa Tiêu đề và Nút Nhật ký -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="KẾT QUẢ CHẨN ĐOÁN:"
-                android:textColor="#666666"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
 
-            <!-- Khối bố cục văn bản kết quả đã nới rộng khoảng cách cách dòng giữa các chữ -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="KẾT QUẢ CHẨN ĐOÁN:"
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:gravity="center_vertical"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnOpenHistory"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📋 Nhật ký"
+                    android:textColor="#1565C0"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:onClick="openHistoryActivityFromXml" />
+            </LinearLayout>
+
+            <!-- Khối văn bản kết quả giữ nguyên khoảng đệm mượt mà -->
             <LinearLayout
                 android:id="@+id/layoutResultClick"
                 android:layout_width="match_parent"
@@ -96,16 +125,14 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:minHeight="48dp"
+                android:minHeight="52dp"
                 android:orientation="vertical"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp">
+                android:paddingVertical="4dp">
 
                 <TextView
                     android:id="@+id/resultTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
                     android:text="Đang nạp dữ liệu..."
                     android:textColor="#2E7D32"
                     android:textSize="20sp"
@@ -115,15 +142,15 @@
                     android:id="@+id/tvClickGuide"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     android:text="👉 Nhấn vào đây để xem giải pháp chi tiết"
                     android:textColor="#1565C0"
-                    android:textSize="12sp"
+                    android:textSize="12.5sp"
                     android:textStyle="italic|bold"
                     android:visibility="gone" />
             </LinearLayout>
 
-            <!-- Thanh chứa hai nút bấm Chọn ảnh và Quét được cân bằng tỷ lệ cân đối -->
+            <!-- Đã sửa: Cân bằng tỷ lệ nút bấm, ép icon và chữ đồng tâm đối xứng tuyệt đối -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,7 +162,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPickImage"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="6dp"
                     android:backgroundTint="#616161"
@@ -145,17 +172,15 @@
                     android:textStyle="bold"
                     app:cornerRadius="10dp"
                     app:icon="@drawable/ic_gallery"
-                    app:iconGravity="start"
-                    app:iconPadding="4dp"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeMaxTextSize="13sp"
-                    android:maxLines="1" />
+                    app:iconGravity="textStart"
+                    app:iconPadding="6dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAction"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:layout_weight="1"
                     android:layout_marginStart="6dp"
                     android:backgroundTint="#2E7D32"
@@ -165,12 +190,10 @@
                     android:textStyle="bold"
                     app:cornerRadius="10dp"
                     app:icon="@drawable/ic_pause"
-                    app:iconGravity="start"
-                    app:iconPadding="4dp"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeMaxTextSize="14sp"
-                    android:maxLines="1" />
+                    app:iconGravity="textStart"
+                    app:iconPadding="6dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"/>
 
             </LinearLayout>
 

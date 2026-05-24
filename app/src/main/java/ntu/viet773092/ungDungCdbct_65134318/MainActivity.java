@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultTextView;
     private ImageView ivSelectedImage;
 
-    // Cập nhật kiểu khai báo sang lớp MaterialButton để quản lý thay đổi Icon động mượt mà
     private MaterialButton btnAction;
     private MaterialButton btnPickImage;
     private LinearLayout layoutResultClick;
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
-    // Khởi tạo bộ lắng nghe đăng ký cấp quyền camera và khởi chạy hộp thư viện ảnh
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) startCamera();
@@ -106,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Cấu hình lắng nghe sự kiện click và điều phối hoán đổi linh hoạt icon Play/Pause chuẩn chỉ
     private void setupButtons() {
         btnAction.setOnClickListener(v -> {
             isAnalyzing = !isAnalyzing;
@@ -147,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Luồng giải mã, thu nhỏ ảnh an toàn chống tràn RAM và đồng bộ hóa icon Play khi hiển thị kết quả tĩnh
     private void processPickedImage(android.net.Uri uri) {
         isAnalyzing = false;
         btnAction.setText("Tiếp tục quét");
@@ -219,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Luồng khởi tạo CameraX và bóc tách từng khung hình luồng video đưa vào bộ thông dịch TFLite
     private void startCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
@@ -279,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
-    // Tải và đồng bộ hóa mô hình mạng nơ-ron từ đám mây Firebase ML Model Downloader
     private void downloadModelFromFirebase() {
         resultTextView.setText("Đang tải mô hình AI...");
 
@@ -306,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    // Khởi tạo mô hình AI cục bộ nằm trong thư mục Assets khi thiết bị mất kết nối internet
     private void loadLocalModelFallback() {
         try {
             tfliteClassifier = new TFLiteClassifier(this, "model.tflite");
@@ -316,6 +309,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             runOnUiThread(() -> resultTextView.setText("Lỗi mô hình! Kiểm tra file assets"));
         }
+    }
+
+    // Hàm đón nhận sự kiện onClick trực tiếp từ tệp tin XML để kích hoạt nhảy trang HistoryActivity
+    public void openHistoryActivityFromXml(android.view.View view) {
+        startActivity(new android.content.Intent(this, HistoryActivity.class));
     }
 
     @Override
