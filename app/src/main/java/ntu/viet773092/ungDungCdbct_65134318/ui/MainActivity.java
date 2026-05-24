@@ -29,6 +29,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.ml.modeldownloader.CustomModelDownloadConditions;
 import com.google.firebase.ml.modeldownloader.DownloadType;
 import com.google.firebase.ml.modeldownloader.FirebaseModelDownloader;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -276,29 +278,54 @@ public class MainActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
+    // CẬP NHẬT: Kéo chuỗi nhãn từ Firebase Remote Config trước, sau đó nạp file mô hình TFLite
     private void downloadModelFromFirebase() {
-        resultTextView.setText("Đang tải mô hình AI...");
+        resultTextView.setText("Đang kiểm tra cập nhật AI..."); 
 
-        CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
-                .requireWifi()
+        // 1. Khởi tạo bộ cấu hình đám mây Firebase Remote Config
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(60) // Kiểm tra và làm mới dữ liệu nhãn sau mỗi 60 giây khi debug
                 .build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
 
-        FirebaseModelDownloader.getInstance()
-                .getModel("crop_doctor_model", DownloadType.LATEST_MODEL, conditions)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        try {
-                            File modelFile = task.getResult().getFile();
-                            tfliteClassifier = new TFLiteClassifier(modelFile, this);
-                            isClassifierReady = true;
-                            runOnUiThread(() -> resultTextView.setText("✅ Mô hình Firebase đã sẵn sàng!"));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            loadLocalModelFallback();
+        // 2. Tiến hành kéo dữ liệu nhãn từ trên Server xuống thiết bị
+        mFirebaseRemoteConfig.fetchAndActivate()
+                .addOnCompleteListener(this, task -> {
+                    // Trích xuất chuỗi nhãn dựa trên Parameter Key đã cấu hình trên Web Firebase
+                    final String remoteLabels = mFirebaseRemoteConfig.getString("ai_model_labels");
+
+                    // 3. Tiến hành tải tệp tin mô hình từ Firebase Model Downloader
+                    CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
+                            .requireWifi() 
+                            .build(); 
+
+                    FirebaseModelDownloader.getInstance() 
+                            .getModel("crop_doctor_model", DownloadType.LATEST_MODEL, conditions) 
+                            .addOnCompleteListener(modelTask -> {
+                        if (modelTask.isSuccessful() && modelTask.getResult() != null) {
+                            try {
+                                File modelFile = modelTask.getResult().getFile(); 
+
+                                // Nếu thiết bị kết nối được và chuỗi nhãn từ Server hợp lệ -> Chạy nhãn đám mây động
+                                if (remoteLabels != null && !remoteLabels.trim().isEmpty()) {
+                                    tfliteClassifier = new TFLiteClassifier(modelFile, remoteLabels);
+                                    isClassifierReady = true; 
+                                    runOnUiThread(() -> resultTextView.setText("✅ Trí tuệ nhân tạo đám mây đã sẵn sàng!"));
+                                } else {
+                                    // Nếu lỗi mạng không lấy được nhãn, tự động lùi về nạp nhãn assets offline ban đầu của bạn
+                                    tfliteClassifier = new TFLiteClassifier(modelFile, this); 
+                                    isClassifierReady = true; 
+                                    runOnUiThread(() -> resultTextView.setText("✅ Đã nạp mô hình đám mây (Nhãn Offline)"));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                loadLocalModelFallback(); 
+                            }
+                        } else {
+                            loadLocalModelFallback(); 
                         }
-                    } else {
-                        loadLocalModelFallback();
-                    }
+                    });
                 });
     }
 

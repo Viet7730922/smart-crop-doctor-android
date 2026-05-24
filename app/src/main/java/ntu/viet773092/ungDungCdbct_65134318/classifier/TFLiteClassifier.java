@@ -37,6 +37,22 @@ public class TFLiteClassifier {
         this.labelList = loadLabelList(context);
     }
 
+    public TFLiteClassifier(File modelFile, String remoteLabelsText) throws IOException {
+        Interpreter.Options options = new Interpreter.Options();
+        this.interpreter = new Interpreter(modelFile, options);
+        this.labelList = new ArrayList<>();
+
+        if (remoteLabelsText != null && !remoteLabelsText.trim().isEmpty()) {
+            // Tách chuỗi văn bản Remote Config theo từng dòng ký tự xuống dòng (\n hoặc \r\n)
+            String[] lines = remoteLabelsText.split("\\r?\\n");
+            for (String line : lines) {
+                if (!line.trim().isEmpty()) {
+                    this.labelList.add(line.trim());
+                }
+            }
+        }
+    }
+
     private MappedByteBuffer loadModelFile(Context context, String modelPath) throws IOException {
         AssetFileDescriptor fileDescriptor = context.getAssets().openFd(modelPath);
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
