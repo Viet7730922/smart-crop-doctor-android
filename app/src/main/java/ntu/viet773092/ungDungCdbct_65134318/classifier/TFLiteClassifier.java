@@ -1,4 +1,4 @@
-package ntu.viet773092.ungDungCdbct_65134318;
+package ntu.viet773092.ungDungCdbct_65134318.classifier;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;

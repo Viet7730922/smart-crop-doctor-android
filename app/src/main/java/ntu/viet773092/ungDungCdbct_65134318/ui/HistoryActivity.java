@@ -1,4 +1,4 @@
-package ntu.viet773092.ungDungCdbct_65134318;
+package ntu.viet773092.ungDungCdbct_65134318.ui;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,6 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
+
+import ntu.viet773092.ungDungCdbct_65134318.R;
+import ntu.viet773092.ungDungCdbct_65134318.adapter.HistoryAdapter;
+import ntu.viet773092.ungDungCdbct_65134318.database.HistoryDatabaseHelper;
 
 public class HistoryActivity extends AppCompatActivity {
 

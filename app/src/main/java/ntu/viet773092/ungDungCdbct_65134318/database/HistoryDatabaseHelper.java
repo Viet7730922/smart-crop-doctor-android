@@ -1,4 +1,4 @@
-package ntu.viet773092.ungDungCdbct_65134318;
+package ntu.viet773092.ungDungCdbct_65134318.database;
 
 import android.content.ContentValues;
 import android.content.Context;

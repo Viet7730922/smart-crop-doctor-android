@@ -1,4 +1,4 @@
-package ntu.viet773092.ungDungCdbct_65134318;
+package ntu.viet773092.ungDungCdbct_65134318.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -26,7 +26,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.ml.modeldownloader.CustomModel;
 import com.google.firebase.ml.modeldownloader.CustomModelDownloadConditions;
 import com.google.firebase.ml.modeldownloader.DownloadType;
 import com.google.firebase.ml.modeldownloader.FirebaseModelDownloader;
@@ -37,6 +36,9 @@ import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import ntu.viet773092.ungDungCdbct_65134318.R;
+import ntu.viet773092.ungDungCdbct_65134318.classifier.TFLiteClassifier;
 
 public class MainActivity extends AppCompatActivity {
 

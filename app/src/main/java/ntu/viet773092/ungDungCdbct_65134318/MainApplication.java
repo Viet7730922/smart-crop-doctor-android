@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import ntu.viet773092.ungDungCdbct_65134318.ui.MainActivity;
+
 // Lớp ứng dụng tự động theo dõi và cung cấp vị trí bộ nhớ của MainActivity mà không can thiệp vào mã nguồn của nó
 public class MainApplication extends Application {
 

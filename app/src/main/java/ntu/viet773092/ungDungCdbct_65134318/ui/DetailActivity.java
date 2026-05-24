@@ -1,4 +1,4 @@
-package ntu.viet773092.ungDungCdbct_65134318;
+package ntu.viet773092.ungDungCdbct_65134318.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +17,10 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+
+import ntu.viet773092.ungDungCdbct_65134318.MainApplication;
+import ntu.viet773092.ungDungCdbct_65134318.R;
+import ntu.viet773092.ungDungCdbct_65134318.database.HistoryDatabaseHelper;
 
 public class DetailActivity extends AppCompatActivity {
 

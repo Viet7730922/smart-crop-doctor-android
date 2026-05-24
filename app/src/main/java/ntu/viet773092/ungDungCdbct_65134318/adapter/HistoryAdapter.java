@@ -1,4 +1,4 @@
-package ntu.viet773092.ungDungCdbct_65134318;
+package ntu.viet773092.ungDungCdbct_65134318.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,6 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
+
+import ntu.viet773092.ungDungCdbct_65134318.ui.DetailActivity;
+import ntu.viet773092.ungDungCdbct_65134318.database.HistoryDatabaseHelper;
+import ntu.viet773092.ungDungCdbct_65134318.R;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
