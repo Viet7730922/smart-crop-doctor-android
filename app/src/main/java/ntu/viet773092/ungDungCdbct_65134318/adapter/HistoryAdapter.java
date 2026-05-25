@@ -66,6 +66,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.itemView.setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(context, DetailActivity.class);
             intent.putExtra("DISEASE_KEY", key);
+            intent.putExtra("IS_FROM_HISTORY", true);
+            intent.putExtra("HISTORY_ID", id);
             context.startActivity(intent);
         });
 

@@ -1,6 +1,8 @@
 package ntu.viet773092.ungDungCdbct_65134318.ui;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -34,6 +36,11 @@ public class DetailActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
     private boolean isSpeaking = false;
 
+    // Biến kiểm soát luồng dữ liệu
+    private boolean isFromHistory = false;
+    private int historyId = -1;
+    private HistoryDatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,19 +55,61 @@ public class DetailActivity extends AppCompatActivity {
         cardDiseaseImage = findViewById(R.id.cardDiseaseImage);
         btnSpeak = findViewById(R.id.btnSpeak);
 
+        dbHelper = new HistoryDatabaseHelper(this);
         btnBack.setOnClickListener(v -> finish());
 
+        // Nhận diện luồng gọi màn hình
         String diseaseKey = getIntent().getStringExtra("DISEASE_KEY");
+        isFromHistory = getIntent().getBooleanExtra("IS_FROM_HISTORY", false);
+        historyId = getIntent().getIntExtra("HISTORY_ID", -1);
 
         if (diseaseKey != null) {
             loadDiseaseSolution(diseaseKey);
         }
 
-        captureCapturedImageFromMain();
+        // Điều phối luồng nạp ảnh lớn
+        if (isFromHistory && historyId != -1) {
+            loadImageFromDatabase(historyId);
+        } else {
+            captureCapturedImageFromMain();
+        }
+
         initTextToSpeech();
     }
 
-    // Khởi tạo và thiết lập định dạng tiếng Việt cho bộ đọc TextToSpeech
+    // Hàm nạp ảnh lớn từ SQLite BLOB khi mở từ lịch sử
+    private void loadImageFromDatabase(int id) {
+        new Thread(() -> {
+            Cursor cursor = null;
+            try {
+                android.database.sqlite.SQLiteDatabase db = dbHelper.getReadableDatabase();
+                // Truy vấn đúng dòng log dựa vào ID
+                cursor = db.query(HistoryDatabaseHelper.TABLE_HISTORY,
+                        new String[]{HistoryDatabaseHelper.COLUMN_IMAGE_BYTES},
+                        HistoryDatabaseHelper.COLUMN_ID + " = ?",
+                        new String[]{String.valueOf(id)}, null, null, null);
+
+                if (cursor != null && cursor.moveToFirst()) {
+                    byte[] imageBytes = cursor.getBlob(cursor.getColumnIndexOrThrow(HistoryDatabaseHelper.COLUMN_IMAGE_BYTES));
+                    if (imageBytes != null && imageBytes.length > 0) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                        runOnUiThread(() -> {
+                            if (bitmap != null) {
+                                diseaseBitmapMemory = bitmap;
+                                ivDiseaseDetail.setImageBitmap(diseaseBitmapMemory);
+                                cardDiseaseImage.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (cursor != null) cursor.close();
+            }
+        }).start();
+    }
+
     private void initTextToSpeech() {
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
@@ -82,7 +131,6 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    // Lọc sạch văn bản giao diện và ra lệnh phát âm thanh phác đồ điều trị
     private void startReadingPhacDo() {
         if (textToSpeech == null) return;
 
@@ -103,7 +151,6 @@ public class DetailActivity extends AppCompatActivity {
         btnSpeak.setIconResource(android.R.drawable.ic_media_ff);
     }
 
-    // Ra lệnh ngắt phát âm và khôi phục trạng thái nút bấm về mặc định
     private void stopReading() {
         if (textToSpeech != null && textToSpeech.isSpeaking()) {
             textToSpeech.stop();
@@ -113,7 +160,6 @@ public class DetailActivity extends AppCompatActivity {
         btnSpeak.setIconResource(android.R.drawable.ic_lock_silent_mode_off);
     }
 
-    // Chặn đứng âm thanh lập tức khi người dùng ẩn ứng dụng hoặc có cuộc gọi đến
     @Override
     protected void onPause() {
         super.onPause();
@@ -125,7 +171,6 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    // Trích xuất ảnh bệnh phẩm từ luồng hiển thị hoạt động của màn hình chính
     private void captureCapturedImageFromMain() {
         try {
             if (MainApplication.getMainActivityContext() != null) {
@@ -157,7 +202,6 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    // Đọc dữ liệu JSON phác đồ giải pháp cục bộ và kích hoạt luồng lưu SQLite ngầm
     private void loadDiseaseSolution(String key) {
         try {
             InputStream is = getAssets().open("disease_solutions.json");
@@ -182,15 +226,17 @@ public class DetailActivity extends AppCompatActivity {
                 tvSymptoms.setText(symptoms);
                 tvTreatment.setText(treatment);
 
-                new Thread(() -> {
-                    try {
-                        HistoryDatabaseHelper dbHelper = new HistoryDatabaseHelper(DetailActivity.this);
-                        Thread.sleep(500);
-                        dbHelper.insertHistory(key, nameVi, diseaseBitmapMemory);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+                // Chỉ thực hiện chèn lịch sử MỚI nếu mở từ màn hình Quét trực tiếp (isFromHistory == false)
+                if (!isFromHistory) {
+                    new Thread(() -> {
+                        try {
+                            Thread.sleep(500);
+                            dbHelper.insertHistory(key, nameVi, diseaseBitmapMemory);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
 
             } else {
                 tvDiseaseName.setText(key);
@@ -206,7 +252,6 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    // Hủy hoàn toàn bộ đọc TextToSpeech và giải phóng tài nguyên đồ họa bộ nhớ RAM
     @Override
     protected void onDestroy() {
         if (textToSpeech != null) {
