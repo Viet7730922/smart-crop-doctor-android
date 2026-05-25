@@ -18,33 +18,30 @@ Dự án được thiết kế với tư duy kiến trúc mở, đóng vai trò 
 
 ## 🚀 Tính Năng Cốt Lõi & Đáp Ứng Thang Điểm
 
-### 1. Tối Ưu Hóa Mô Hình Trên Thiết Bị Đầu Cuối 
-Ứng dụng tích hợp hai phiên bản mô hình để phục vụ bài toán so sánh hiệu năng trong báo cáo kỹ thuật:
-* **Bản gốc (Float32):** Cho độ chính xác cao nhất, dùng làm mốc đối chứng (Baseline).
-* **Bản lượng tử hóa (Quantized INT8):** Áp dụng kỹ thuật *Post-Training Quantization* giúp giảm dung lượng file mô hình xuống ~4 lần, tối ưu tốc độ suy luận (Inference Time) và tiết kiệm RAM/Pin cho thiết bị di động.
-* *Tính năng phụ trợ:* Nút chuyển đổi (Toggle) trực tiếp trên giao diện để đo lường và so sánh FPS, thời gian xử lý giữa 2 phiên bản mô hình.
+### 1. Tối Ưu Hóa Nhận Diện Trên Thiết Bị Đầu Cuối
+* **Kiến trúc LiteRT/TFLite ổn định:** Ứng dụng tích hợp mô hình AI (`model.tflite`) tối ưu hóa dung lượng, giảm thiểu thời gian suy luận (Inference Time) trực tiếp trên thiết bị đầu cuối mà không bị phụ thuộc vào API xử lý ảnh bên ngoài.
+* **Xử lý luồng CameraX Real-time:** Sử dụng thuộc tính `ImageAnalysis` của Jetpack CameraX để trích xuất và phân tích khung hình camera theo thời gian thực. Toàn bộ tiến trình tính toán nặng được đẩy vào luồng phụ `ExecutorService` để giải phóng luồng giao diện chính (UI Thread), chống giật lag và quá nhiệt máy.
 
-### 2. Triển Khai Linh Hoạt Theo Tư Duy MLOps
-Dịch bệnh cây trồng thay đổi liên tục theo mùa vụ. Thay vì phải biên dịch lại mã nguồn, ứng dụng áp dụng quy trình MLOps thông qua **Firebase ML Custom Model**:
-* **Cơ chế Fallback:** Nhúng sẵn mô hình mặc định trong thư mục `assets` để chạy ngoại tuyến (Offline) ngay khi cài app.
-* **Cập nhật Over-The-Air (OTA):** Tự động kiểm tra và tải ngầm (Background download) phiên bản mô hình mới nhất từ Firebase Console khi có kết nối Internet, giúp cập nhật danh mục nhận diện bệnh mới một cách xuyên suốt.
+### 2. Linh Hoạt Điều Phối Theo Tư Duy MLOps (OTA)
+Dịch bệnh cây trồng luôn biến đổi theo mùa vụ. Ứng dụng giải quyết bài toán cập nhật danh mục bệnh bằng cơ chế đám mây:
+* **Cơ chế Dự phòng (Offline Fallback):** Nhúng sẵn tệp mô hình và file nhãn bệnh (`labels.txt`) trong thư mục `assets` giúp ứng dụng hoạt động ngoại tuyến ngay sau khi cài đặt.
+* **Cập nhật Over-The-Air (OTA):** Khi có mạng, ứng dụng sử dụng `FirebaseRemoteConfig` để kéo cấu trúc nhãn bệnh mới nhất (`ai_model_labels`) kết hợp với `FirebaseModelDownloader` để tải ngầm phiên bản mô hình nâng cấp từ Firebase Console về máy.
 
-### 3. Kỹ Thuật Xử Lý Ảnh Thời Gian Thực & Lưu Trữ 
-* **CameraX Real-time Scanning:** Sử dụng Use Case `ImageAnalysis` của Jetpack CameraX để trích xuất luồng hình ảnh trực tiếp. Áp dụng kỹ thuật điều tiết khung hình (Inference Throttling - chạy 3-5 frame/giây) để chống quá nhiệt và giật lag.
-* **Cơ sở dữ liệu kép (Local & Cloud):**
-    * **Room Database:** Lưu trữ dữ liệu cấu hình cục bộ, hiển thị phác đồ và cách chữa trị bệnh ngay lập tức kể cả khi không có mạng.
-    * **Firebase Firestore:** Đồng bộ các bài thuốc, danh mục thuốc bảo vệ thực vật mới nhất từ đám mây.
+### 3. Lưu Trữ Nhật Ký & Hỗ Trợ Tiện Ích Thông Minh
+* **Hệ thống Nhật ký Chẩn đoán (SQLite):** Tích hợp SQLite Database thông qua `HistoryDatabaseHelper` để tự động lưu trữ lại mọi phiên quét bệnh thành công (gồm tên bệnh, thời gian dd/MM/yyyy và mảng bytes hình ảnh bệnh phẩm). Người dùng dễ dàng quản lý, xem lại phác đồ hoặc xóa bản ghi qua giao diện RecyclerView.
+* **Bộ đọc Phác đồ bằng giọng nói (TTS):** Tích hợp công nghệ `TextToSpeech` hỗ trợ gói ngôn ngữ Tiếng Việt chuẩn, tự động chuyển đổi toàn bộ thông tin nguyên nhân, triệu chứng và cách chữa trị từ file cấu hình JSON thành giọng nói, tăng cường trải nghiệm thực địa cho nông dân.
 
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
 
-* **IDE:** Android Studio
-* **Ngôn ngữ:** Java 
+* **IDE / Ngôn ngữ:** Android Studio | Java (JDK 11)
+* **Quản lý Thư viện:** Gradle Kotlin DSL (`build.gradle.kts`) & Version Catalog (`libs.versions.toml`)
 * **Camera Framework:** Jetpack CameraX (`Core`, `Camera2`, `Lifecycle`, `View`)
-* **Machine Learning Runtime:** TensorFlow Lite (TFLite) & TFLite Support Library
-* **Cloud & MLOps:** Firebase (Firebase ML Model Downloader, Firestore)
-* **Local Storage:** Room Persistence Library
+* **Machine Learning Runtime:** TensorFlow Lite (LiteRT API)
+* **Cloud & MLOps:** Firebase (Firebase BoM, Remote Config, ML Model Downloader)
+* **Local Storage:** SQLite (SQLiteOpenHelper), JSON Parsing (JSONObject)
+* **Tiện ích hệ thống:** Android TextToSpeech API
 
 ---
 
