@@ -72,4 +72,4 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
                 ├── 📄 activity_main.xml         # UI Màn hình quét CameraX, khung kết quả chẩn đoán và các nút lệnh
                 ├── 📄 activity_detail.xml       # UI Trang chi tiết giải pháp: Ảnh lớn, mô tả bệnh và nút phát âm thanh
                 ├── 📄 activity_history.xml      # UI Trang danh sách nhật ký chẩn đoán
-                └── 📄 item_history.xml          # UI Thiết kế từng dòng thẻ (Card) hiển thị trong Nhật ký                     # Cấu hình thư viện Dependencies
+                └── 📄 item_history.xml          # UI Thiết kế từng dòng thẻ (Card) hiển thị trong Nhật ký
