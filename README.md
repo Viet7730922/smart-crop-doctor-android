@@ -73,3 +73,27 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
                 ├── 📄 activity_detail.xml       # UI Trang chi tiết giải pháp: Ảnh lớn, mô tả bệnh và nút phát âm thanh
                 ├── 📄 activity_history.xml      # UI Trang danh sách nhật ký chẩn đoán
                 └── 📄 item_history.xml          # UI Thiết kế từng dòng thẻ (Card) hiển thị trong Nhật ký
+
+## 🎯 Kết quả thử nghiệm
+
+### Bệnh **Tomato Target Spot** (Bệnh đốm bia bắn trên cà chua)
+
+Ứng dụng đã nhận diện chính xác bệnh **Target Spot** trên lá cà chua qua camera:
+
+<div align="center">
+
+**Hình ảnh lá bệnh:**
+
+![Tomato Target Spot 1](pictures/tomato_target_spot_p1.png)
+![Tomato Target Spot 2](pictures/tomato_target_spot_p2.png)
+
+**Kết quả quét từ ứng dụng:**
+
+![Scan Result](pictures/tomato_target_spot_scan.png)
+
+</div>
+
+**Kết quả chẩn đoán:**  
+**Bệnh:** Tomato Target Spot  
+**Độ tin cậy:** 94.8%  
+**Khuyến nghị:** Phun thuốc trừ nấm + cắt bỏ lá bệnh + cải thiện thông thoáng vườn.
