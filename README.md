@@ -74,6 +74,10 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
                 ├── 📄 activity_history.xml      # UI Trang danh sách nhật ký chẩn đoán
                 └── 📄 item_history.xml          # UI Thiết kế từng dòng thẻ (Card) hiển thị trong Nhật ký
 
+```
+
+---
+
 ## 🎯 Kết quả thử nghiệm
 
 ### Bệnh **Tomato Target Spot** (Bệnh đốm bia bắn trên cà chua)
