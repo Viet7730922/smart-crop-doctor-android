@@ -84,7 +84,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 ![Model Config](pictures/test_pics/firebase_crop_labels.png)
 
-<p>Cấu hình model trên Firebase để ánh xạ đến ứng dụng Android:</p>
+<p>Cấu hình AI Model trên Firebase để ánh xạ đến ứng dụng Android:</p>
 
 ![Machine Learning](pictures/test_pics/firebase_tensorflow_model.png)
 
