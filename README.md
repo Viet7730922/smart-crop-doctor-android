@@ -88,6 +88,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 </div>
 
+***
 ### Bệnh **Tomato Target Spot** (Bệnh đốm bia bắn trên cà chua)
 
 Ứng dụng đã nhận diện chính xác bệnh **Target Spot** trên lá cà chua qua camera:
