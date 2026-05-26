@@ -78,6 +78,17 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 ---
 
+## ![Settings](pictures/test_pics/settings.png) Cấu hình firebase
+
+<p>Cấu hình các nhãn (tên các mẫu bệnh) của các loại lá cây trên Firebase:</p>
+
+![Model Config](pictures/test_pics/firebase_crop_labels.png)
+
+<p>Cấu hình model trên Firebase để ánh xạ đến ứng dụng Android:</p>
+
+![Machine Learning](pictures/test_pics/firebase_tensorflow_model.png)
+
+---
 ## 🎯 Kết quả thử nghiệm
 
 ### Nhật ký chẩn đoán (Hiển thị lịch sử quét của người dùng)
@@ -103,6 +114,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 ![Tomato Target Spot 1](pictures/test_pics/tomato_target_spot_p1.png)
 ![Tomato Target Spot 2](pictures/test_pics/tomato_target_spot_p2.png)
+
 
 </div>
 
