@@ -97,16 +97,26 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 **Hình ảnh lá bệnh:**
 
-![Tomato Target Spot 1](pictures/tomato_target_spot_p1.png)
-![Tomato Target Spot 2](pictures/tomato_target_spot_p2.png)
+![Scan Result](pictures/tomato_target_spot_scan.png)
 
 **Kết quả quét từ ứng dụng:**
 
-![Scan Result](pictures/tomato_target_spot_scan.png)
+![Tomato Target Spot 1](pictures/tomato_target_spot_p1.png)
+![Tomato Target Spot 2](pictures/tomato_target_spot_p2.png)
 
 </div>
 
-**Kết quả chẩn đoán:**  
-**Bệnh:** Tomato Target Spot  
-**Độ tin cậy:** 94.8%  
-**Khuyến nghị:** Phun thuốc trừ nấm + cắt bỏ lá bệnh + cải thiện thông thoáng vườn.
+***
+### Bệnh **Pepper Bell Healthy** (Ớt chuông khỏe mạnh)
+
+<div align="center">
+
+**Hình ảnh lá ớt chuông:**
+
+![Scan Result](pictures/pepper_bell_healthy_scan.png)
+
+**Kết quả quét từ ứng dụng:**
+
+![Pepper Bell Healthy](pictures/pepper_bell_healthy_p1.png)
+
+</div>
