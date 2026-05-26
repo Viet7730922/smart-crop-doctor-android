@@ -84,7 +84,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 <div align="center">
 
-![Diary 1](pictures/diary_1.png)
+![Diary 1](pictures/test_pics/diary_1.png)
 
 </div>
 
@@ -97,12 +97,12 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 **Hình ảnh lá bệnh:**
 
-![Scan Result](pictures/tomato_target_spot_scan.png)
+![Scan Result](pictures/test_pics/tomato_target_spot_scan.png)
 
 **Kết quả quét từ ứng dụng:**
 
-![Tomato Target Spot 1](pictures/tomato_target_spot_p1.png)
-![Tomato Target Spot 2](pictures/tomato_target_spot_p2.png)
+![Tomato Target Spot 1](pictures/test_pics/tomato_target_spot_p1.png)
+![Tomato Target Spot 2](pictures/test_pics/tomato_target_spot_p2.png)
 
 </div>
 
@@ -113,10 +113,10 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 **Hình ảnh lá ớt chuông:**
 
-![Scan Result](pictures/pepper_bell_healthy_scan.png)
+![Scan Result](pictures/test_pics/pepper_bell_healthy_scan.png)
 
 **Kết quả quét từ ứng dụng:**
 
-![Pepper Bell Healthy](pictures/pepper_bell_healthy_p1.png)
+![Pepper Bell Healthy](pictures/test_pics/pepper_bell_healthy_p1.png)
 
 </div>
