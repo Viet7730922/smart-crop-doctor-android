@@ -80,6 +80,15 @@ public class HistoryDatabaseHelper extends SQLiteOpenHelper {
         return db.query(TABLE_HISTORY, null, null, null, null, null, COLUMN_ID + " DESC");
     }
 
+    public android.database.Cursor searchHistory(String queryText) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = COLUMN_DISEASE_NAME_VI + " LIKE ?";
+        String[] selectionArgs = new String[]{"%" + queryText + "%"};
+
+        // Trả về Cursor kết quả và sắp xếp ID giảm dần (mới nhất lên đầu)
+        return db.query(TABLE_HISTORY, null, selection, selectionArgs, null, null, COLUMN_ID + " DESC");
+    }
+
     public void deleteHistoryItem(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_HISTORY, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});

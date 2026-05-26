@@ -1,6 +1,5 @@
 package ntu.viet773092.ungDungCdbct_65134318.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import ntu.viet773092.ungDungCdbct_65134318.ui.DetailActivity;
 import ntu.viet773092.ungDungCdbct_65134318.database.HistoryDatabaseHelper;
@@ -71,19 +72,25 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             context.startActivity(intent);
         });
 
-        // Nhấn vào biểu tượng chiếc thùng rác đỏ để yêu cầu xác nhận xóa dòng nhật ký
         holder.btnDelete.setOnClickListener(v -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Xóa nhật ký")
-                    .setMessage("Bạn có chắc chắn muốn xóa lịch sử chẩn đoán này không?")
-                    .setPositiveButton("Xóa", (dialog, which) -> {
+            new MaterialAlertDialogBuilder(context)
+                    .setTitle("Xóa nhật ký chẩn đoán?")
+                    .setMessage("Hành động này sẽ xóa vĩnh viễn phác đồ và hình ảnh bệnh phẩm này khỏi bộ nhớ thiết bị. Bạn có chắc chắn không?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(true)
+                    .setPositiveButton("Xóa dữ liệu", (dialog, which) -> {
+                        // Khởi tạo luồng xóa SQLite cục bộ
                         HistoryDatabaseHelper dbHelper = new HistoryDatabaseHelper(context);
                         dbHelper.deleteHistoryItem(id);
+
                         if (itemClickListener != null) {
                             itemClickListener.onItemDeleted();
                         }
+
+                        // Hiển thị thông báo Snackbar xác nhận trạng thái xóa thành công ở đáy màn hình
+                        Snackbar.make(holder.itemView, "Đã xóa bản ghi thành công", Snackbar.LENGTH_SHORT).show();
                     })
-                    .setNegativeButton("Hủy", null)
+                    .setNegativeButton("Hủy bỏ", null)
                     .show();
         });
     }
