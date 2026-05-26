@@ -107,7 +107,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 </div>
 
 ***
-### Bệnh **Pepper Bell Healthy** (Ớt chuông khỏe mạnh)
+### **Pepper Bell Healthy** (Ớt chuông khỏe mạnh)
 
 <div align="center">
 
