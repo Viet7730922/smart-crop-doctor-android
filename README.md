@@ -121,14 +121,6 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 ***
 ### **Pepper Bell Healthy** (Ớt chuông khỏe mạnh)
 
-<div align="center">
-
-**Hình ảnh lá ớt chuông:**
-
-![Scan Result](pictures/test_pics/pepper_bell_healthy_scan.png)
-
-**Kết quả quét từ ứng dụng:**
-
-![Pepper Bell Healthy](pictures/test_pics/pepper_bell_healthy_p1.png)
-
-</div>
+| **Hình ảnh lá ớt chuông** | **Kết quả quét từ ứng dụng** |
+|---------------------------|------------------------------|
+| ![Scan Result](pictures/test_pics/pepper_bell_healthy_scan.png) | ![Pepper Bell Healthy](pictures/test_pics/pepper_bell_healthy_p1.png) |
