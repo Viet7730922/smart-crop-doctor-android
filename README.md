@@ -78,7 +78,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 ---
 
-## <img src="pictures/test_pics/settings.png" width="38" height="38" style="vertical-align:middle; margin-right:8px;"> Cấu hình Firebase
+## <img src="pictures/test_pics/settings.png" width="24" height="24" style="vertical-align:middle; margin-right:8px;"> Cấu hình Firebase
 
 <p>Cấu hình các nhãn (tên các mẫu bệnh) của các loại lá cây trên Firebase:</p>
 
