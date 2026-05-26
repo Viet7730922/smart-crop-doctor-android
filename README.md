@@ -80,6 +80,14 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 
 ## 🎯 Kết quả thử nghiệm
 
+### Nhật ký chẩn đoán (Hiển thị lịch sử quét của người dùng)
+
+<div align="center">
+
+![Diary 1](pictures/diary_1.png)
+
+</div>
+
 ### Bệnh **Tomato Target Spot** (Bệnh đốm bia bắn trên cà chua)
 
 Ứng dụng đã nhận diện chính xác bệnh **Target Spot** trên lá cà chua qua camera:
