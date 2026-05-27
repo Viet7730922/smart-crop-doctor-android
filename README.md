@@ -177,5 +177,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 ***
 ### Video thực hiện đọc âm thanh từ kết quả chuẩn đoán **"Bệnh Phấn trắng trên cây anh đào"** 
 
-<video src='https://raw.githubusercontent.com/Viet7730922/smart-crop-doctor-android/main/pictures/test_pics/cherry_pm.mp4' controls width='100%'></video>
+https://github.com/user-attachments/assets/5352648a-866b-412e-81ae-2af5fbdebc1e
+
+
 
