@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
                 FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                        .setMinimumFetchIntervalInSeconds(60)
+                        .setMinimumFetchIntervalInSeconds(0)
                         .setFetchTimeoutInSeconds(4) // TỐI ƯU: Chờ tối đa 4 giây, nếu mạng nghẽn tự động hủy để về Offline
                         .build();
                 mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
@@ -330,7 +330,6 @@ public class MainActivity extends AppCompatActivity {
                                 String remoteLabels = mFirebaseRemoteConfig.getString("ai_model_labels");
 
                                 CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
-                                        .requireWifi() // Tải qua WiFi để tiết kiệm dữ liệu di động
                                         .build();
 
                                 FirebaseModelDownloader.getInstance()
