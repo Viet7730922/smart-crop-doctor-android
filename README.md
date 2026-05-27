@@ -175,6 +175,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 | ![Scan Result](pictures/test_pics/cherry_healthy_scan.png) | ![Strawberry Healthy](pictures/test_pics/cherry_healthy_p1.png) |
 
 ***
-### Video **Bệnh Phấn trắng trên cây anh đào** (Thực hiện đọc âm thanh từ kết quả chuẩn đoán - text-to-speech)
+### Video thực hiện đọc âm thanh từ kết quả chuẩn đoán **"Bệnh Phấn trắng trên cây anh đào"** 
 
 <video src='https://raw.githubusercontent.com/Viet7730922/smart-crop-doctor-android/main/pictures/test_pics/cherry_pm.mp4' controls width='100%'></video>
+
