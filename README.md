@@ -126,9 +126,15 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 | ![Scan Result](pictures/test_pics/pepper_bell_healthy_scan.png) | ![Pepper Bell Healthy](pictures/test_pics/pepper_bell_healthy_p1.png) |
 
 ***
-### **Corn Gray Leaf Spot** (Bệnh Đốm Xám hại Ngô)
+### Bệnh **Corn Gray Leaf Spot** (Bệnh Đốm Xám hại Ngô)
 
 | **Hình ảnh lá ngô (bắp)**                                  | **Kết quả quét từ ứng dụng**                                |
 |------------------------------------------------------------|-------------------------------------------------------------|
 | ![Scan Result](pictures/test_pics/corn_gray_spot_scan.png) | ![Corn Gray Spot](pictures/test_pics/corn_gray_spot_p1.png) |
 
+***
+### **Orange Citrus Greening** (Bệnh Vàng lá Gân xanh trên Cam quýt)
+
+| **Hình ảnh lá cam**                                                | **Kết quả quét từ ứng dụng**                                                |
+|--------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| ![Scan Result](pictures/test_pics/orange_citrus_greening_scan.png) | ![Orange Citrus Greening](pictures/test_pics/orange_citrus_greening_p1.png) |
