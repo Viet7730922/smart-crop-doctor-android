@@ -89,7 +89,7 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 ![Machine Learning](pictures/test_pics/firebase_tensorflow_model.png)
 
 ---
-## 🎯 Kết quả thử nghiệm
+## 🎯 Kết quả thử nghiệm (từ máy ảo Android)
 
 ### Nhật ký chẩn đoán (Hiển thị lịch sử quét của người dùng)
 
@@ -138,3 +138,11 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 | **Hình ảnh lá cam**                                                | **Kết quả quét từ ứng dụng**                                                |
 |--------------------------------------------------------------------|-----------------------------------------------------------------------------|
 | ![Scan Result](pictures/test_pics/orange_citrus_greening_scan.png) | ![Orange Citrus Greening](pictures/test_pics/orange_citrus_greening_p1.png) |
+
+***
+### **Soybean Healthy** (Cây đậu nành khỏe mạnh)
+
+| **Hình ảnh lá cây đậu nành**                                | **Kết quả quét từ ứng dụng**                                  |
+|-------------------------------------------------------------|---------------------------------------------------------------|
+| ![Scan Result](pictures/test_pics/soybean_healthy_scan.png) | ![Soybean Healthy](pictures/test_pics/soybean_healthy_p1.png) |
+
