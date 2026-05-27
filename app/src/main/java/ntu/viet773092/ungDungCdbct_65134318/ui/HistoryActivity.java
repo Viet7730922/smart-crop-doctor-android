@@ -23,7 +23,7 @@ public class HistoryActivity extends AppCompatActivity {
     private TextInputEditText etSearchHistory; //  Biến kiểm soát ô tìm kiếm
     private HistoryDatabaseHelper dbHelper;
     private Cursor historyCursor;
-    private String currentSearchQuery = ""; //  Lưu trữ trạng thái từ khóa lọc hiện tại
+    private String currentSearchQuery = ""; // Lưu trữ trạng thái từ khóa lọc hiện tại
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
-    // 🟢 ĐÃ SỬA: Hàm nạp dữ liệu tích hợp cơ chế nhận diện từ khóa tìm kiếm
+    // Hàm nạp dữ liệu tích hợp cơ chế nhận diện từ khóa tìm kiếm
     private void loadHistoryData(String query) {
         // Đóng con trỏ Cursor cũ nếu đang mở để giải phóng bộ nhớ hệ thống trước khi nạp lại
         if (historyCursor != null && !historyCursor.isClosed()) {
