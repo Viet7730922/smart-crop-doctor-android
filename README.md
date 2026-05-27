@@ -146,3 +146,10 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 |-------------------------------------------------------------|---------------------------------------------------------------|
 | ![Scan Result](pictures/test_pics/soybean_healthy_scan.png) | ![Soybean Healthy](pictures/test_pics/soybean_healthy_p1.png) |
 
+***
+### **Strawberry Healthy** (Cây dâu tây khỏe mạnh)
+
+| **Hình ảnh lá cây dâu tây**                                    | **Kết quả quét từ ứng dụng**                                        |
+|----------------------------------------------------------------|---------------------------------------------------------------------|
+| ![Scan Result](pictures/test_pics/strawberry_healthy_scan.png) | ![Strawberry Healthy](pictures/test_pics/strawberry_healthy_p1.png) |
+
