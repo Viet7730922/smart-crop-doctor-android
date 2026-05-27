@@ -153,3 +153,11 @@ Dưới đây là sơ đồ tổ chức thư mục chính:
 |----------------------------------------------------------------|---------------------------------------------------------------------|
 | ![Scan Result](pictures/test_pics/strawberry_healthy_scan.png) | ![Strawberry Healthy](pictures/test_pics/strawberry_healthy_p1.png) |
 
+***
+### Bệnh **Strawberry Healthy** (Bệnh Cháy rụi lá dâu tây)
+
+| **Hình ảnh lá cây dâu tây**                                        | **Kết quả quét từ ứng dụng**                                                |
+|--------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| ![Scan Result](pictures/test_pics/strawberry_leaf_scorch_scan.png) | ![Strawberry Leaf Scorch](pictures/test_pics/strawberry_leaf_scorch_p1.png) |
+
+
