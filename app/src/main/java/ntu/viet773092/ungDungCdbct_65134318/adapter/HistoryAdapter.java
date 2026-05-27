@@ -76,7 +76,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             new MaterialAlertDialogBuilder(context)
                     .setTitle("Xóa nhật ký chẩn đoán?")
                     .setMessage("Hành động này sẽ xóa vĩnh viễn phác đồ và hình ảnh bệnh phẩm này khỏi bộ nhớ thiết bị. Bạn có chắc chắn không?")
-                    .setIcon(R.drawable.ic_attention)
+                    .setIcon(R.drawable.ic_alert_2)
                     .setCancelable(true)
                     .setPositiveButton("Xóa dữ liệu", (dialog, which) -> {
                         // Khởi tạo luồng xóa SQLite cục bộ
