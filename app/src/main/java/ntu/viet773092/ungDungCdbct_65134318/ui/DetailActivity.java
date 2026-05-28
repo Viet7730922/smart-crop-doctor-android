@@ -178,21 +178,25 @@ public class DetailActivity extends AppCompatActivity {
                 ImageView mainImageView = mainActivity.findViewById(R.id.ivSelectedImage);
                 androidx.camera.view.PreviewView mainPreviewView = mainActivity.findViewById(R.id.viewFinder);
 
+                Bitmap sourceBitmap = null;
+
                 if (mainImageView != null && mainImageView.getVisibility() == View.VISIBLE) {
                     if (mainImageView.getDrawable() instanceof BitmapDrawable) {
                         Bitmap origin = ((BitmapDrawable) mainImageView.getDrawable()).getBitmap();
                         if (origin != null && !origin.isRecycled()) {
-                            diseaseBitmapMemory = origin.copy(origin.getConfig(), false);
+                            sourceBitmap = origin;
                         }
                     }
                 } else if (mainPreviewView != null) {
                     Bitmap cameraFrame = mainPreviewView.getBitmap();
-                    if (cameraFrame != null) {
-                        diseaseBitmapMemory = cameraFrame;
+                    if (cameraFrame != null && !cameraFrame.isRecycled()) {
+                        sourceBitmap = cameraFrame;
                     }
                 }
 
-                if (diseaseBitmapMemory != null) {
+                if (sourceBitmap != null) {
+                    // Resize trước khi lưu để tránh OOM
+                    diseaseBitmapMemory = Bitmap.createScaledBitmap(sourceBitmap, 420, 420, true);
                     ivDiseaseDetail.setImageBitmap(diseaseBitmapMemory);
                     cardDiseaseImage.setVisibility(View.VISIBLE);
                 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +58,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.tvTime.setText(timestamp);
 
         if (imageBytes != null && imageBytes.length > 0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-            holder.ivImage.setImageBitmap(bitmap);
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 2;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
+                holder.ivImage.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                holder.ivImage.setImageResource(android.R.drawable.ic_menu_gallery);
+            }
         } else {
             holder.ivImage.setImageResource(android.R.drawable.ic_menu_gallery);
         }
@@ -94,6 +103,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     .show();
         });
     }
+
+    @Override
+    public void onViewRecycled(@NonNull HistoryViewHolder holder) {
+        super.onViewRecycled(holder);
+
+        // Giải phóng bitmap khi item không còn hiển thị
+        if (holder.ivImage.getDrawable() instanceof BitmapDrawable) {
+            BitmapDrawable drawable = (BitmapDrawable) holder.ivImage.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+            if (bitmap != null && !bitmap.isRecycled()) {
+                holder.ivImage.setImageDrawable(null); // Tránh leak
+            }
+        }
+    }
+
 
     @Override
     public int getItemCount() {

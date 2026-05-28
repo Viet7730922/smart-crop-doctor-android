@@ -45,28 +45,43 @@ public class HistoryDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Hàm chèn lịch sử chẩn đoán mới vào DB
-    public void insertHistory(String key, String nameVi, Bitmap bitmap) {
+    public void insertHistory(String key, String nameVi, Bitmap originalBitmap) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_DISEASE_KEY, key);
         values.put(COLUMN_DISEASE_NAME_VI, nameVi);
 
-        // Tạo thời gian theo định dạng dd/MM/yyyy HH:mm
+        // Tạo thời gian
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String currentDateTime = sdf.format(new Date());
-
         values.put(COLUMN_TIMESTAMP, currentDateTime);
 
-        // Chuyển Bitmap sang byte[] để lưu vào BLOB
-        if (bitmap != null && !bitmap.isRecycled()) {
+        // Xử lý ảnh - GIẢM KÍCH THƯỚC TRƯỚC KHI LƯU
+        if (originalBitmap != null && !originalBitmap.isRecycled()) {
+            Bitmap resizedBitmap = null;
             try {
+                // Resize về kích thước nhỏ (thumbnail)
+                int targetWidth = 320;
+                float ratio = (float) originalBitmap.getHeight() / originalBitmap.getWidth();
+                int targetHeight = (int) (targetWidth * ratio);
+
+                resizedBitmap = Bitmap.createScaledBitmap(originalBitmap,
+                        targetWidth, targetHeight, true);
+
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                // Dùng JPEG + chất lượng 85% để giảm dung lượng mạnh
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
+
                 byte[] imageBytes = outputStream.toByteArray();
                 values.put(COLUMN_IMAGE_BYTES, imageBytes);
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                // Giải phóng bitmap tạm
+                if (resizedBitmap != null && resizedBitmap != originalBitmap) {
+                    resizedBitmap.recycle();
+                }
             }
         }
 
