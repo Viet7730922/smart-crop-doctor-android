@@ -190,12 +190,12 @@ public class DetailActivity extends AppCompatActivity {
                 } else if (mainPreviewView != null) {
                     Bitmap cameraFrame = mainPreviewView.getBitmap();
                     if (cameraFrame != null && !cameraFrame.isRecycled()) {
-                        sourceBitmap = cameraFrame;
+                        // Crop theo khung trước khi lưu
+                        sourceBitmap = mainActivity.cropToScanOverlay(cameraFrame);  // Gọi hàm public
                     }
                 }
 
                 if (sourceBitmap != null) {
-                    // Resize trước khi lưu để tránh OOM
                     diseaseBitmapMemory = Bitmap.createScaledBitmap(sourceBitmap, 420, 420, true);
                     ivDiseaseDetail.setImageBitmap(diseaseBitmapMemory);
                     cardDiseaseImage.setVisibility(View.VISIBLE);

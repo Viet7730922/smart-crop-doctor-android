@@ -243,15 +243,21 @@ public class MainActivity extends AppCompatActivity {
 
                             runOnUiThread(() -> {
                                 Bitmap bitmap = viewFinder.getBitmap();
-
                                 if (bitmap == null) {
+                                    image.close();
                                     return;
                                 }
 
-                                Bitmap scaledCameraBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+                                // === CROP THEO KHUNG ===
+                                Bitmap croppedBitmap = cropToScanOverlay(bitmap);
+
+                                Bitmap scaledCameraBitmap = Bitmap.createScaledBitmap(croppedBitmap, 200, 200, true);
                                 Bitmap finalCameraBitmap = scaledCameraBitmap.copy(Bitmap.Config.ARGB_8888, false);
 
                                 if (scaledCameraBitmap != finalCameraBitmap) scaledCameraBitmap.recycle();
+                                if (croppedBitmap != bitmap && croppedBitmap != null) {
+                                    croppedBitmap.recycle();
+                                }
 
                                 cameraExecutor.execute(() -> {
                                     try {
@@ -369,6 +375,47 @@ public class MainActivity extends AppCompatActivity {
                 loadLocalModelFallback();
             }
         });
+    }
+
+    public Bitmap cropToScanOverlay(Bitmap fullBitmap) {
+        if (fullBitmap == null) return null;
+
+        try {
+            // Lấy vị trí và kích thước thực tế của scanOverlay trên màn hình
+            View scanOverlay = findViewById(R.id.scanOverlay);
+
+            if (scanOverlay == null) {
+                return fullBitmap; // fallback
+            }
+
+            // Chuyển tọa độ từ View sang tọa độ Bitmap
+            int[] location = new int[2];
+            scanOverlay.getLocationInWindow(location);
+
+            // Lấy tọa độ của PreviewView
+            int[] previewLocation = new int[2];
+            viewFinder.getLocationInWindow(previewLocation);
+
+            // Tính offset tương đối
+            int overlayX = location[0] - previewLocation[0];
+            int overlayY = location[1] - previewLocation[1];
+            int overlayWidth = scanOverlay.getWidth();
+            int overlayHeight = scanOverlay.getHeight();
+
+            // Đảm bảo không vượt giới hạn bitmap
+            overlayX = Math.max(0, Math.min(overlayX, fullBitmap.getWidth() - overlayWidth));
+            overlayY = Math.max(0, Math.min(overlayY, fullBitmap.getHeight() - overlayHeight));
+
+            // Crop
+            Bitmap cropped = Bitmap.createBitmap(fullBitmap,
+                    overlayX, overlayY,
+                    overlayWidth, overlayHeight);
+
+            return cropped;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return fullBitmap; // fallback nếu lỗi
+        }
     }
 
     private void loadLocalModelFallback() {
