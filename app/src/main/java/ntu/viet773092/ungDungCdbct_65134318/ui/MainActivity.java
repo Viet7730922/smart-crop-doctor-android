@@ -381,40 +381,48 @@ public class MainActivity extends AppCompatActivity {
         if (fullBitmap == null) return null;
 
         try {
-            // Lấy vị trí và kích thước thực tế của scanOverlay trên màn hình
             View scanOverlay = findViewById(R.id.scanOverlay);
+            if (scanOverlay == null) return fullBitmap;
 
-            if (scanOverlay == null) {
-                return fullBitmap; // fallback
-            }
+            // Lấy tọa độ và kích thước khung quét trên màn hình
+            int[] overlayLocation = new int[2];
+            scanOverlay.getLocationInWindow(overlayLocation);
 
-            // Chuyển tọa độ từ View sang tọa độ Bitmap
-            int[] location = new int[2];
-            scanOverlay.getLocationInWindow(location);
-
-            // Lấy tọa độ của PreviewView
             int[] previewLocation = new int[2];
             viewFinder.getLocationInWindow(previewLocation);
 
-            // Tính offset tương đối
-            int overlayX = location[0] - previewLocation[0];
-            int overlayY = location[1] - previewLocation[1];
-            int overlayWidth = scanOverlay.getWidth();
-            int overlayHeight = scanOverlay.getHeight();
+            int viewLeft = overlayLocation[0] - previewLocation[0];
+            int viewTop = overlayLocation[1] - previewLocation[1];
+            int viewWidth = scanOverlay.getWidth();
+            int viewHeight = scanOverlay.getHeight();
 
-            // Đảm bảo không vượt giới hạn bitmap
-            overlayX = Math.max(0, Math.min(overlayX, fullBitmap.getWidth() - overlayWidth));
-            overlayY = Math.max(0, Math.min(overlayY, fullBitmap.getHeight() - overlayHeight));
+            // TÍNH TOÁN TỶ LỆ SCALE GIỮA BITMAP CAMERA VÀ VIEW ĐỒ HỌA MÀN HÌNH
+            float scaleX = (float) fullBitmap.getWidth() / viewFinder.getWidth();
+            float scaleY = (float) fullBitmap.getHeight() / viewFinder.getHeight();
 
-            // Crop
-            Bitmap cropped = Bitmap.createBitmap(fullBitmap,
-                    overlayX, overlayY,
-                    overlayWidth, overlayHeight);
+            // Ánh xạ tọa độ view sang tọa độ thực tế trên ma trận Bitmap của Camera
+            int bitmapX = (int) (viewLeft * scaleX);
+            int bitmapY = (int) (viewTop * scaleY);
+            int bitmapWidth = (int) (viewWidth * scaleX);
+            int bitmapHeight = (int) (viewHeight * scaleY);
 
-            return cropped;
+            // Giới hạn biên an toàn tránh văng lỗi quá kích thước bitmap
+            bitmapX = Math.max(0, Math.min(bitmapX, fullBitmap.getWidth() - 1));
+            bitmapY = Math.max(0, Math.min(bitmapY, fullBitmap.getHeight() - 1));
+
+            if (bitmapX + bitmapWidth > fullBitmap.getWidth()) {
+                bitmapWidth = fullBitmap.getWidth() - bitmapX;
+            }
+            if (bitmapY + bitmapHeight > fullBitmap.getHeight()) {
+                bitmapHeight = fullBitmap.getHeight() - bitmapY;
+            }
+
+            // Tiến hành cắt chuẩn xác phân vùng nằm trọn trong khung ngắm hình học
+            return Bitmap.createBitmap(fullBitmap, bitmapX, bitmapY, bitmapWidth, bitmapHeight);
+
         } catch (Exception e) {
             e.printStackTrace();
-            return fullBitmap; // fallback nếu lỗi
+            return fullBitmap;
         }
     }
 
