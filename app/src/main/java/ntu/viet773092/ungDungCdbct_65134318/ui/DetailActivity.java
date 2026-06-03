@@ -1,6 +1,7 @@
 package ntu.viet773092.ungDungCdbct_65134318.ui;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -82,17 +83,28 @@ public class DetailActivity extends AppCompatActivity {
         new Thread(() -> {
             Cursor cursor = null;
             try {
-                android.database.sqlite.SQLiteDatabase db = dbHelper.getReadableDatabase();
-                // Truy vấn đúng dòng log dựa vào ID
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+
                 cursor = db.query(HistoryDatabaseHelper.TABLE_HISTORY,
                         new String[]{HistoryDatabaseHelper.COLUMN_IMAGE_BYTES},
                         HistoryDatabaseHelper.COLUMN_ID + " = ?",
                         new String[]{String.valueOf(id)}, null, null, null);
 
                 if (cursor != null && cursor.moveToFirst()) {
-                    byte[] imageBytes = cursor.getBlob(cursor.getColumnIndexOrThrow(HistoryDatabaseHelper.COLUMN_IMAGE_BYTES));
+                    byte[] imageBytes = cursor.getBlob(
+                            cursor.getColumnIndexOrThrow(HistoryDatabaseHelper.COLUMN_IMAGE_BYTES)
+                    );
+
                     if (imageBytes != null && imageBytes.length > 0) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                        // Tối ưu hóa giải mã ảnh để tiết kiệm RAM
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inSampleSize = 2;                    // Giảm độ phân giải 2 lần
+                        options.inPreferredConfig = Bitmap.Config.RGB_565; // Tiết kiệm bộ nhớ màu
+
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(
+                                imageBytes, 0, imageBytes.length, options
+                        );
+
                         runOnUiThread(() -> {
                             if (bitmap != null) {
                                 diseaseBitmapMemory = bitmap;
