@@ -20,7 +20,7 @@ Dự án được thiết kế với tư duy kiến trúc mở, đóng vai trò 
 ## 🚀 Tính Năng Cốt Lõi & Đáp Ứng Thang Điểm
 
 ### 1. Tối Ưu Hóa Nhận Diện Trên Thiết Bị Đầu Cuối
-* **Kiến trúc LiteRT/TFLite ổn định:** Ứng dụng tích hợp mô hình AI (`model.tflite`) tối ưu hóa dung lượng, giảm thiểu thời gian suy luận (Inference Time) trực tiếp trên thiết bị đầu cuối mà không bị phụ thuộc vào API xử lý ảnh bên ngoài.
+* **Kiến trúc LiteRT/TFLite ổn định:** Ứng dụng tích hợp mô hình AI (`model.tflite`) được chuyển đổi và tối ưu hóa từ quá trình huấn luyện trên tập dữ liệu **[PlantVillage](https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset)** (Kaggle). Mô hình giúp giảm thiểu dung lượng, rút ngắn thời gian suy luận (Inference Time) trực tiếp trên thiết bị đầu cuối mà không bị phụ thuộc vào API xử lý ảnh bên ngoài.
 * **Xử lý luồng CameraX Real-time:** Sử dụng thuộc tính `ImageAnalysis` của Jetpack CameraX để trích xuất và phân tích khung hình camera theo thời gian thực. Toàn bộ tiến trình tính toán nặng được đẩy vào luồng phụ `ExecutorService` để giải phóng luồng giao diện chính (UI Thread), chống giật lag và quá nhiệt máy.
 
 ### 2. Linh Hoạt Điều Phối Theo Tư Duy MLOps (OTA)
