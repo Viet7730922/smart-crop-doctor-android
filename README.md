@@ -8,6 +8,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Backend-Firebase-yellow.svg?style=for-the-badge&logo=firebase" alt="Backend">
   <img src="https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Dataset-PlantVillage%20(Kaggle)-lightblue.svg?style=for-the-badge&logo=kaggle" alt="Dataset">
 </p>
 
 **Smart Crop Doctor** là ứng dụng di động chạy trên nền tảng Android, sử dụng Trí tuệ nhân tạo (AI) để phân tích hình ảnh và chẩn đoán các loại sâu bệnh trên lá cây (đốm lá, rỉ sắt, vàng lá...) theo thời gian thực. 
